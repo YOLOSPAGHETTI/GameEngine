@@ -27,7 +27,7 @@ public class Animation extends ArrayList<Sprite> {
     
     public boolean checkNextSprite(long frameTime) {
     	spriteTime += frameTime;
-    	System.out.println(spriteTime);
+    	// System.out.println(spriteTime);
     	if(spriteTime > timePerSprite) {
     		index++;
     		if(index < this.size()) {

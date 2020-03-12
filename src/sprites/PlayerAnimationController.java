@@ -4,7 +4,7 @@ import java.awt.Image;
 import java.util.ArrayList;
 
 public class PlayerAnimationController extends AnimationController {
-    
+	
     public PlayerAnimationController() {
     }
     

@@ -13,14 +13,16 @@ public class FrameController extends JFrame {
     }
     
     private void initUI() {
-        add(new FrameBuilder());
-
+        add(new FrameBuilder());         
+        
         setResizable(false);
         pack();
         
         setTitle("Game");
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);        
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
     public static void main(String[] args) {

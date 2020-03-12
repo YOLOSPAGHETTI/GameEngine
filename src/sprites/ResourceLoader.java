@@ -1,17 +1,21 @@
 package sprites;
 
+import java.awt.Dimension;
+
+import java.awt.Toolkit;
+
 public class ResourceLoader {
-	public static final int frameWidth = 1000;
-	public static final int frameHeight = 750;
+	public static int frameWidth;
+	public static int frameHeight;
 	public static final String bgFile = "";
 	
-	private static final int playerWidth = 100;
-	private static final int playerHeight = 100;
-	private static final int playerStartX = frameWidth/2 - 100;
-	private static final int playerStartY = frameHeight - 100;
+	private static int playerWidth;
+	private static int playerHeight;
+	private static int playerStartX;
+	private static int playerStartY;
 	private static final String playerStartFile = "src/img/player/germanic-knight.jpg";
-	private static final Sprite playerStartSprite = new Sprite(playerStartFile, playerStartX, playerStartY, playerWidth, playerHeight);
-	private static final Sprite playerNextSprite = new Sprite(playerStartFile, playerStartX+10, playerStartY, playerWidth, playerHeight);
+	private static Sprite playerStartSprite;
+	private static Sprite playerNextSprite;
 	
 	public static final PlayerAnimationController pac = new PlayerAnimationController();
 	private static final long playerIdleTime = 1000;
@@ -19,17 +23,35 @@ public class ResourceLoader {
     private static final long playerStabTime = 800;
     private static final long playerBlockTime = 100;
     private static final long playerStunTime = 250;
-    public Animation playerCleaveLeftAnimation;
-    public Animation playerCleaveRightAnimation;
-    public Animation playerStabLeftAnimation;
-    public Animation playerStabMidAnimation;
-    public Animation playerStabRightAnimation;
-    public Animation playerBlockLeftAnimation;
-    public Animation playerBlockMidAnimation;
-    public Animation playerBlockRightAnimation;
-    public Animation playerStunnedAnimation;
+    public static Animation playerCleaveLeftAnimation;
+    public static Animation playerCleaveRightAnimation;
+    public static Animation playerStabLeftAnimation;
+    public static Animation playerStabMidAnimation;
+    public static Animation playerStabRightAnimation;
+    public static Animation playerBlockLeftAnimation;
+    public static Animation playerBlockMidAnimation;
+    public static Animation playerBlockRightAnimation;
+    public static Animation playerStunnedAnimation;
     public static Animation playerIdleAnimation;
- 
+
+    public static void useNativeResolution() {
+    	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    	changeResolution(screenSize.width, screenSize.height);
+    }
+    
+    public static void changeResolution(int width, int height) {
+    	frameWidth = width;
+    	frameHeight = height;
+    	
+    	playerWidth = width/10;
+    	playerHeight = height/7;
+    	playerStartX = width/2 - playerWidth/2;
+    	playerStartY = height - playerHeight - playerHeight/2;
+    	
+    	playerStartSprite = new Sprite(playerStartFile, playerStartX, playerStartY, playerWidth, playerHeight);
+    	playerNextSprite = new Sprite(playerStartFile, playerStartX+10, playerStartY, playerWidth, playerHeight);
+    }
+    
     public static void setupAnimations() {
     	playerIdleAnimation = new Animation(pac, playerIdleTime);
     	playerIdleAnimation.add(playerStartSprite);

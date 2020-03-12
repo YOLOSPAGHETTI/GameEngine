@@ -1,20 +1,21 @@
 package game;
 
 import sprites.PlayerAnimationController;
+import sprites.ResourceLoader;
 import sprites.Sprite;
 
 public class Player {
-    PlayerAnimationController ps;
+    PlayerAnimationController pac;
 
     private float touchXStart;
     private float touchYStart;
     private long lastTouchTime;
     private int blocking;
 
-    public Player(PlayerAnimationController ps) {
+    public Player(PlayerAnimationController pac) {
         // setControls(image);
 
-        this.ps = ps;
+        this.pac = pac;
     }
 
     /*private boolean canAct() {
@@ -24,23 +25,23 @@ public class Player {
     private void stab(int direction) {
         //System.out.println("stab: "+direction);
         if(direction == 0) {
-            ps.runAnimation(ps.stabLeftAnimation);
+            pac.runAnimation(ResourceLoader.playerStabLeftAnimation);
         }
         else if(direction == 1) {
-            ps.runAnimation(ps.stabMidAnimation);
+            pac.runAnimation(ResourceLoader.playerStabMidAnimation);
         }
         else if(direction == 2) {
-            ps.runAnimation(ps.stabRightAnimation);
+            pac.runAnimation(ResourceLoader.playerStabRightAnimation);
         }
     }
 
     private void cleave(int direction) {
         //System.out.println("cleave: "+direction);
         if(direction == 0) {
-            ps.runAnimation(ps.cleaveLeftAnimation);
+            pac.runAnimation(ResourceLoader.playerCleaveLeftAnimation);
         }
         else if(direction == 2) {
-            ps.runAnimation(ps.cleaveRightAnimation);
+            pac.runAnimation(ResourceLoader.playerCleaveRightAnimation);
         }
     }
 

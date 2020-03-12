@@ -17,6 +17,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import controls.ControlHelper;
+
 public class FrameBuilder extends JPanel
 		implements Runnable {
     private int width;
@@ -28,15 +30,19 @@ public class FrameBuilder extends JPanel
     private final int frameTime = 15;
     
     private PlayerAnimationController pac;
+    private ControlHelper ch;
 
     public FrameBuilder() {
+    	ResourceLoader.useNativeResolution();
+        width = ResourceLoader.frameWidth;
+        height = ResourceLoader.frameHeight;
+        bgFile = ResourceLoader.bgFile;
+    	
     	ResourceLoader.setupAnimations();
     	pac = ResourceLoader.pac;
     	pac.initialize();
     	
-        width = ResourceLoader.frameWidth;
-        height = ResourceLoader.frameHeight;
-        bgFile = ResourceLoader.bgFile;
+    	ch = new ControlHelper(this);
         
         build();
     }

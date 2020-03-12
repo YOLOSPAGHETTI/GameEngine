@@ -8,12 +8,14 @@ import java.awt.image.ImageProducer;
 import javax.swing.ImageIcon;
 
 public class Sprite extends Image {
+	int id;
 	private String fileSource;
 	private Image img;
-	private int width;
-    private int height;
-    private int x;
-    private int y;
+	int width;
+    int height;
+    int x;
+    int y;
+    int z;
     
     public Sprite(String file, int x, int y) {
     	fileSource = file;
@@ -34,6 +36,10 @@ public class Sprite extends Image {
     	this.x = x;
     	this.y = y;
     	loadImage(file, scale);
+    }
+    
+    public int getId() {
+    	return id;
     }
     
 	private void loadImage(String file) {

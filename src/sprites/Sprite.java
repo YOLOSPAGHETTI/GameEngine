@@ -1,27 +1,78 @@
 package sprites;
 
-import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.image.ImageObserver;
-import java.awt.image.ImageProducer;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
-import javax.swing.ImageIcon;
+import javax.imageio.ImageIO;
 
-public class Sprite extends Image {
-	int id;
+public class Sprite {
+	private int maxX;
+	private int maxY;
 	private String fileSource;
-	private Image img;
-	int width;
-    int height;
-    int x;
-    int y;
-    int z;
+	private BufferedImage img;
+	private int width;
+    private int height;
+    private int x;
+    private int y;
+    private int z;
+    
+    // Menu Item
+    public Sprite(String file, int menuSize) {
+    	fileSource = file;
+    	
+    	loadImage();
+    	
+    	width = ResourceLoader.frameWidth;
+    	maxX = ResourceLoader.frameWidth-width;
+    	maxY = ResourceLoader.frameHeight-height;
+    	x = 0;
+    	y = height * menuSize;
+    }
+    
+    // Scroll Edge
+    public Sprite(String file, boolean right) {
+    	fileSource = file;
+    	
+    	loadImage();
+    	height = ResourceLoader.frameHeight;
+    	maxX = ResourceLoader.frameWidth-width;
+    	maxY = ResourceLoader.frameHeight-height;
+    	if(right) {
+    		x=maxX;
+    	}
+    	else {
+    		x=0;
+    	}
+    	y = 0;
+    }
+    
+    // Scroll Bar
+    public Sprite(String file, boolean right, int height, int width) {
+    	fileSource = file;
+    	
+    	loadImage();
+    	this.height = height;
+    	this.width = width;
+    	maxX = ResourceLoader.frameWidth-width;
+    	maxY = ResourceLoader.frameHeight-height;
+    	if(right) {
+    		x=maxX;
+    	}
+    	else {
+    		x=0;
+    	}
+    	y = 0;
+    }
     
     public Sprite(String file, int x, int y) {
     	fileSource = file;
     	this.x = x;
     	this.y = y;
-    	loadImage(file);
+    	loadImage();
+    	maxX = ResourceLoader.frameWidth-width;
+    	maxY = ResourceLoader.frameHeight-height;
     }
     
     public Sprite(String file, int x, int y, int width, int height) {
@@ -29,35 +80,43 @@ public class Sprite extends Image {
     	
     	this.width = width;
     	this.height = height;
+    	maxX = ResourceLoader.frameWidth-width;
+    	maxY = ResourceLoader.frameHeight-height;
     }
     
     public Sprite(String file, int x, int y, double scale) {
     	fileSource = file;
     	this.x = x;
     	this.y = y;
-    	loadImage(file, scale);
+    	loadImage(scale);
+    	maxX = ResourceLoader.frameWidth-width;
+    	maxY = ResourceLoader.frameHeight-height;
     }
     
-    public int getId() {
-    	return id;
-    }
-    
-	private void loadImage(String file) {
-        ImageIcon ii = new ImageIcon(file);
-        if (width == 0) {
-        	width = ii.getIconWidth();
-        }
-        if (height == 0) {
-        	height = ii.getIconHeight();
-        }
-        img = ii.getImage();
+	private void loadImage() {
+		try {
+			img = ImageIO.read(new File(fileSource));
+			if (width == 0) {
+	        	width = img.getWidth();
+	        }
+	        if (height == 0) {
+	        	height = img.getHeight();
+	        }
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
     }
 	
-	private void loadImage(String file, double scale) {
-        ImageIcon ii = new ImageIcon(file);
-        width = (int) Math.round(ii.getIconWidth() * scale);
-        height = (int) Math.round(ii.getIconHeight() * scale);
-        img = ii.getImage();
+	private void loadImage(double scale) {
+		try {
+			img = ImageIO.read(new File(fileSource));
+			width = (int) Math.round(img.getWidth() * scale);
+	        height = (int) Math.round(img.getHeight() * scale);
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
     }
 	
 	public String getFileSource() {
@@ -68,45 +127,65 @@ public class Sprite extends Image {
 		return img;
 	}
 	
+	public int getWidth() {
+		return width;
+	}
+	
+	public void setWidth(int width) {
+		this.width = width;
+		maxX = ResourceLoader.frameWidth-width;
+	}
+	
+	public int getHeight() {
+		return height;
+	}
+	
+	public void setHeight(int height) {
+		this.height = height;
+		maxY = ResourceLoader.frameHeight-height;
+	}
+	
 	public int getX() {
 		return x;
+	}
+	
+	public void setX(int x) {
+		this.x = fixX(x);
+	}
+	
+	public void setXAbsolute(int x) {
+		this.x = x;
 	}
 	
 	public int getY() {
 		return y;
 	}
 	
-	public static void main(String[] args) {
-		//loadImage("src/img/germanic-knight.jpg", 0.2);
+	public void setY(int y) {
+		this.y = fixY(y);
 	}
-
-	@Override
-	public int getWidth(ImageObserver observer) {
-		// TODO Auto-generated method stub
-		return width;
+	
+	public void setYAbsolute(int y) {
+		this.y = y;
 	}
-
-	@Override
-	public int getHeight(ImageObserver observer) {
-		// TODO Auto-generated method stub
-		return height;
+	
+	private int fixX(int x) {
+		if(x < 0) {
+			return 0;
+		}
+		else if(x > maxX) {
+			return maxX;
+		}
+		return x;
 	}
-
-	@Override
-	public ImageProducer getSource() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Graphics getGraphics() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Object getProperty(String name, ImageObserver observer) {
-		// TODO Auto-generated method stub
-		return null;
+	
+	private int fixY(int y) {
+		if(y < 0) {
+			return 0;
+		}
+		else if(y > maxY) {
+			return maxY;
+		}
+		return y;
 	}
 }

@@ -11,26 +11,26 @@ public class MouseListenerEvent implements MouseListener {
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		ch.eventOutput("Mouse clicked", e);
+		ch.mouseClicked(e);
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		ch.eventOutput("Mouse entered", e);
+		//ch.mouseEntered(e);
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		ch.eventOutput("Mouse exited", e);
+		ch.mouseExited(e);
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		ch.eventOutput("Mouse pressed", e);
+		ch.mousePressed(e);
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		ch.eventOutput("Mouse released", e);
+		ch.mouseReleased(e);
 	}
 }

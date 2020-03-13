@@ -17,10 +17,10 @@ public class MouseMotionListenerEvent implements MouseMotionListener {
     }
     
     public void mouseMoved(MouseEvent e) {
-        ch.eventOutput("Mouse moved", e);
+        ch.mouseMoved(e);
     }
     
     public void mouseDragged(MouseEvent e) {
-        ch.eventOutput("Mouse dragged", e);
+        ch.mouseDragged(e);
     }
 }

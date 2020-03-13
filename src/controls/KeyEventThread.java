@@ -1,29 +1,22 @@
 package controls;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import org.jnativehook.GlobalScreen;
-
 
 public class KeyEventThread extends Thread  {
 	private KeyboardListener myKeys = new KeyboardListener();
 	Thread t;
-	public boolean running;
+	private boolean running;
 	private String keyBuffer;
 	private ControlHelper ch;
 	
 	public KeyEventThread(ControlHelper ch) {
 		this.ch = ch;
-		running = true;
-		start();
 	}
 	
 	public void start()
 	{
+		running = true;
+		
 	    t = new Thread(this);
 	    t.start();
 	    try {
@@ -57,5 +50,9 @@ public class KeyEventThread extends Thread  {
 			System.out.println("Exception in KeyCapture Thread");
 			e.printStackTrace();
 		}      
+	}
+	
+	public void setRunning(boolean toRun) {
+		running = toRun;
 	}
 }

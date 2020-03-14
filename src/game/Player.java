@@ -1,8 +1,8 @@
 package game;
 
-import sprites.PlayerAnimationController;
-import sprites.ResourceLoader;
-import sprites.Sprite;
+import ui.PlayerAnimationController;
+import ui.ResourceLoader;
+import ui.Sprite;
 
 public class Player {
     PlayerAnimationController pac;
@@ -43,6 +43,10 @@ public class Player {
         else if(direction == 2) {
             pac.runAnimation(ResourceLoader.playerCleaveRightAnimation);
         }
+    }
+    
+    public PlayerAnimationController getAnimationController() {
+    	return pac;
     }
 
     /*private void setControls(View image) {

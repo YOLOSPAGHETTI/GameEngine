@@ -1,4 +1,4 @@
-package sprites;
+package ui;
 
 import java.util.ArrayList;
 
@@ -8,7 +8,6 @@ public class Menu extends ArrayList<MenuItem> {
 	private MenuItem itemHighlighted;
 	private boolean scrollEdgeHighlighted = false;
 	private boolean scrollBarHighlighted = false;
-	private int location = 0;
 	
 	void setTotalHeight(int totalHeight) {
 		this.totalHeight = totalHeight;
@@ -27,17 +26,21 @@ public class Menu extends ArrayList<MenuItem> {
 		if(down) {
 			if(itemHighlighted == null || itemHighlighted.getIndex() == size-1) {
 				itemHighlighted = this.get(0);
+				fixHighlightedOutOfFrame();
 			}
 			else {
 				itemHighlighted = this.get(itemHighlighted.getIndex()+1);
+				fixHighlightedOutOfFrame();
 			}
 		}
 		else {
 			if(itemHighlighted == null || itemHighlighted.getIndex() == 0) {
 				itemHighlighted = this.get(size-1);
+				fixHighlightedOutOfFrame();
 			}
 			else {
 				itemHighlighted = this.get(itemHighlighted.getIndex()-1);
+				fixHighlightedOutOfFrame();
 			}
 		}
 	}
@@ -104,14 +107,39 @@ public class Menu extends ArrayList<MenuItem> {
 	void moveScrollBar(int mouseY) {
 		int distance = scrollBar.move(mouseY);
 		double percentage = (double)distance/(double)scrollBar.getMaxDistance();
-		System.out.println(percentage);
+		//System.out.println(percentage);
 		int heightDifference = totalHeight - ResourceLoader.frameHeight;
-		int offset = (int)Math.round((double)location + (double)heightDifference*percentage);
+		int offset = (int)Math.round((double)heightDifference*percentage);
+		//System.out.println(offset);
+		relocateItems(offset);
+	}
+	
+	private void fixHighlightedOutOfFrame() {
+		Sprite sprite = itemHighlighted.getBaseSprite();
+		int spriteY = sprite.getY();
+		int spriteHeight = sprite.getHeight();
+		//System.out.println("spriteY: " + spriteY + " frameHeight: " + ResourceLoader.frameHeight + " spriteHeight: " + spriteHeight);
+		if(spriteY < 0) {
+			int offset = -spriteY;
+			//System.out.println("above: " + offset);
+			//System.out.println("newLocation: " + (spriteY+offset) + " expectedLocation: 0");
+			relocateItems(offset);
+		}
+		else if(spriteY + spriteHeight > ResourceLoader.frameHeight)  {
+			int offset = -spriteY - spriteHeight + ResourceLoader.frameHeight;
+			//System.out.println("below: " + offset);
+			//System.out.println("newLocation: " + (spriteY+offset) + " expectedLocation: " + (ResourceLoader.frameHeight - spriteHeight));
+			relocateItems(offset);
+		}
+	}
+	
+	private void relocateItems(int offset) {
 		for(MenuItem item : this) {
 			Sprite sprite = item.getBaseSprite();
-			sprite.setYAbsolute(sprite.getY()+offset);
+			int newLocation = sprite.getY()+offset;
+			sprite.setYAbsolute(newLocation);
 			sprite = item.getHighlightedSprite();
-			sprite.setYAbsolute(sprite.getY()+offset);
+			sprite.setYAbsolute(newLocation);
 		}
 	}
 }

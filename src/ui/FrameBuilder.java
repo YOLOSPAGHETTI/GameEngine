@@ -1,4 +1,4 @@
-package sprites;
+package ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -14,7 +14,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import sprites.MenuItem;
+import ui.MenuItem;
 
 public class FrameBuilder extends JPanel
 		implements Runnable {
@@ -71,29 +71,31 @@ public class FrameBuilder extends JPanel
     	if(ResourceLoader.screenIsMenu(screen)) {
     		Menu menu = mc.getMenus().get(screen);
     		
-    		for(MenuItem menuItem : menu) {
-            	if(menuItem.equals(menu.getHighlighted())) {
-            		addSprite(g, menuItem.getHighlightedSprite(), menuItem.getText());
-            	}
-            	else {
-            		addSprite(g, menuItem.getBaseSprite(), menuItem.getText());
-            	}
-            }
-    		MenuScrollBar menuScrollBar = menu.getScrollBar();
-    		if(menuScrollBar != null) {
-    			if(menu.isScrollEdgeHighlighted()) {
-            		addSprite(g, menuScrollBar.getHighlightedEdgeSprite());
-            		if(menu.isScrollBarSelected()) {
-            			addSprite(g, menuScrollBar.getSelectedBarSprite());
-            		}
-            		else {
-            			addSprite(g, menuScrollBar.getBaseBarSprite());
-            		}
-            	}
-            	else {
-            		addSprite(g, menuScrollBar.getBaseEdgeSprite());
-            		addSprite(g, menuScrollBar.getBaseBarSprite());
-            	}
+    		if(menu != null) {
+	    		for(MenuItem menuItem : menu) {
+	            	if(menuItem.equals(menu.getHighlighted())) {
+	            		addSprite(g, menuItem.getHighlightedSprite(), menuItem.getText());
+	            	}
+	            	else {
+	            		addSprite(g, menuItem.getBaseSprite(), menuItem.getText());
+	            	}
+	            }
+	    		MenuScrollBar menuScrollBar = menu.getScrollBar();
+	    		if(menuScrollBar != null) {
+	    			if(menu.isScrollEdgeHighlighted()) {
+	            		addSprite(g, menuScrollBar.getHighlightedEdgeSprite());
+	            		if(menu.isScrollBarSelected()) {
+	            			addSprite(g, menuScrollBar.getSelectedBarSprite());
+	            		}
+	            		else {
+	            			addSprite(g, menuScrollBar.getBaseBarSprite());
+	            		}
+	            	}
+	            	else {
+	            		addSprite(g, menuScrollBar.getBaseEdgeSprite());
+	            		addSprite(g, menuScrollBar.getBaseBarSprite());
+	            	}
+	    		}
     		}
     	}
     	else if(screen == ResourceLoader.inGameScreen) {

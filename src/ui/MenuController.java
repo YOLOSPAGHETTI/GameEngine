@@ -1,4 +1,4 @@
-package sprites;
+package ui;
 
 import java.util.HashMap;
 
@@ -63,6 +63,12 @@ public class MenuController {
 			if(menu.isScrollBarHighlighted()) {
 				menu.setScrollBarSelected(select, mouseY);
 			}
+    	}
+    }
+    
+    public void goBack() {
+    	if(fc.getScreen() != ResourceLoader.startMenuScreen) {
+    		fc.setScreen(ResourceLoader.startMenuScreen);
     	}
     }
 }

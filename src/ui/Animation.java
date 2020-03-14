@@ -1,16 +1,14 @@
-package sprites;
+package ui;
 import java.util.ArrayList;
 
 public class Animation extends ArrayList<Sprite> {
-    private AnimationController controller;
     private long duration;
     private long timePerSprite;
     private long spriteTime;
     private Sprite currentSprite;
     private int index;
 
-    Animation(AnimationController controller, long duration) {
-        this.controller = controller;
+    Animation(long duration) {
         this.duration = duration;
     }
     

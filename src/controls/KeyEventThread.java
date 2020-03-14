@@ -41,7 +41,6 @@ public class KeyEventThread extends Thread  {
 				{
 					//System.out.println(keyBuffer);
 					ch.checkActions(keyBuffer);
-					//System.out.println(firing);
 				}
 			}
 		}
@@ -54,5 +53,9 @@ public class KeyEventThread extends Thread  {
 	
 	public void setRunning(boolean toRun) {
 		running = toRun;
+	}
+	
+	public boolean getRunning() {
+		return running;
 	}
 }

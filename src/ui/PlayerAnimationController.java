@@ -1,7 +1,4 @@
-package sprites;
-
-import java.awt.Image;
-import java.util.ArrayList;
+package ui;
 
 public class PlayerAnimationController extends AnimationController {
 	

@@ -3,24 +3,26 @@ package controls;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
-import sprites.FrameController;
-import sprites.MenuController;
-import sprites.PlayerAnimationController;
-import sprites.ResourceLoader;
+import game.Player;
+import ui.FrameController;
+import ui.MenuController;
+import ui.PlayerAnimationController;
+import ui.ResourceLoader;
 
 public class ControlHelper {
 	private FrameController fc;
 	private MenuController mc;
-	private PlayerAnimationController pac;
+	private Player player;
+	private KeyEventThread ket;
 	
 	private ArrayList<String> controls;
 	private ArrayList<String> keyboardControls;
 	private ArrayList<String> mouseControls;
 	
-	public ControlHelper(FrameController fc, MenuController mc, PlayerAnimationController pac) {
+	public ControlHelper(FrameController fc, MenuController mc, Player player) {
 		this.fc = fc;
 		this.mc = mc;
-		this.pac = pac;
+		this.player = player;
 		controls = new PlayerControls();
 		for(String control : controls) {
 			if(control.contains("Mouse")) {
@@ -38,7 +40,7 @@ public class ControlHelper {
         fc.addMouseListener(mle);
         fc.addMouseMotionListener(mmle);
         
-        KeyEventThread ket = new KeyEventThread(this);
+        ket = new KeyEventThread(this);
         ket.start();
 	}
 	
@@ -101,6 +103,9 @@ public class ControlHelper {
 				}
 				else if(keyCommand.equals("Enter")) {
 					mc.selectHighlightedItem();
+				}
+				else if(keyCommand.equals("Escape")) {
+					mc.goBack();
 				}
 			}
 		}

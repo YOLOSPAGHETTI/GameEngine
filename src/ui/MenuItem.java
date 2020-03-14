@@ -1,4 +1,4 @@
-package sprites;
+package ui;
 
 public class MenuItem {
 	private String text;

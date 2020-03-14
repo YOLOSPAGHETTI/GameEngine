@@ -1,8 +1,9 @@
-package sprites;
+package ui;
 
 import javax.swing.JFrame;
 
 import controls.ControlHelper;
+import game.Player;
 
 public class FrameController extends JFrame {
 	
@@ -12,15 +13,15 @@ public class FrameController extends JFrame {
 	private PlayerAnimationController pac;
 	private FrameBuilder fb;
 	
-	public FrameController() {
+	public FrameController(Player player) {
 		ResourceLoader.replacePathSeparators();
 		ResourceLoader.useNativeResolution();
 		screen = ResourceLoader.startMenuScreen;
 		mc = new MenuController(this);
 		ResourceLoader.setupAnimations();
-    	pac = ResourceLoader.pac;
+		pac = player.getAnimationController();
     	pac.initialize();
-		ch = new ControlHelper(this, mc, pac);
+		ch = new ControlHelper(this, mc, player);
         initUI();
     }
     

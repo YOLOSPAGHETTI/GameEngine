@@ -20,14 +20,14 @@ public class KeyboardListener implements NativeKeyListener {
 		keyPressBuffer.put(writeBufferCount, new KeyPress(e.getKeyCode(), 1));
 		writeBufferCount++;
 		
-		if (e.getKeyCode() == NativeKeyEvent.VC_ESCAPE) {
+		/*if (e.getKeyCode() == NativeKeyEvent.VC_ESCAPE) {
 			try {
 			GlobalScreen.unregisterNativeHook();
 			}
 			catch (Exception ex) {
 				ex.printStackTrace();
 			}
-		}
+		}*/
 	}
 	
 	public String readKeyBuffer()

@@ -1,4 +1,4 @@
-package sprites;
+package ui;
 
 import java.awt.Dimension;
 
@@ -6,8 +6,8 @@ import java.awt.Toolkit;
 import java.io.File;
 import java.util.HashMap;
 
-import sprites.Menu;
-import sprites.MenuItem;
+import ui.Menu;
+import ui.MenuItem;
 
 public final class ResourceLoader {
 	private static final String workingDir = System.getProperty("user.dir");
@@ -155,7 +155,7 @@ public final class ResourceLoader {
     }
     
     public static void setupAnimations() {
-    	playerIdleAnimation = new Animation(pac, playerIdleTime);
+    	playerIdleAnimation = new Animation(playerIdleTime);
     	playerIdleAnimation.add(playerStartSprite);
     	playerIdleAnimation.add(playerNextSprite);
     	playerIdleAnimation.calculateTimePerSprite();

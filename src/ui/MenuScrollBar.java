@@ -73,21 +73,25 @@ public class MenuScrollBar {
 		return selectedY;
 	}
 	
-	int move(int mouseY) {
+	int move(int y) {
 		if(selectedY > -1) {
 			int oldY = barBaseSprite.getY();
-			int newY = mouseY - selectedY;
+			int newY = y - selectedY;
 			barBaseSprite.setY(newY);
 			barSelectedSprite.setY(newY);
 			return oldY - barBaseSprite.getY();
 		}
 		else {
 			int oldY = barBaseSprite.getY();
-			int newY = mouseY - barBaseSprite.getHeight()/2;
+			int newY = y - barBaseSprite.getHeight()/2;
 			barBaseSprite.setY(newY);
 			barSelectedSprite.setY(newY);
 			return oldY - barBaseSprite.getY();
 		}
+	}
+	
+	void relocate(int distance) {
+		barBaseSprite.setY(barBaseSprite.getY()-distance);
 	}
 	
 	int getMaxDistance() {

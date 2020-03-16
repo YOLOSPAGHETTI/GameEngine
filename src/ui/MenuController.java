@@ -43,6 +43,9 @@ public class MenuController {
 		if(destination != -1) {
 			fc.setScreen(destination);
 		}
+		else {
+			System.exit(0);
+		}
     }
     
     public void checkHighlightedItem(int mouseY) {
@@ -67,8 +70,12 @@ public class MenuController {
     }
     
     public void goBack() {
-    	if(fc.getScreen() != ResourceLoader.startMenuScreen) {
-    		fc.setScreen(ResourceLoader.startMenuScreen);
+    	Menu menu = menus.get(fc.getScreen());
+    	if(menu != null) {
+    		int parentId = menu.getParentId();
+    		if(parentId != -1) {
+    			fc.setScreen(parentId);
+        	}
     	}
     }
 }

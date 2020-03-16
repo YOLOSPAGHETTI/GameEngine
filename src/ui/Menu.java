@@ -8,6 +8,7 @@ public class Menu extends ArrayList<MenuItem> {
 	private MenuItem itemHighlighted;
 	private boolean scrollEdgeHighlighted = false;
 	private boolean scrollBarHighlighted = false;
+	private int parentId = -1;
 	
 	void setTotalHeight(int totalHeight) {
 		this.totalHeight = totalHeight;
@@ -123,12 +124,14 @@ public class Menu extends ArrayList<MenuItem> {
 			int offset = -spriteY;
 			//System.out.println("above: " + offset);
 			//System.out.println("newLocation: " + (spriteY+offset) + " expectedLocation: 0");
+			relateScrollBar(offset);
 			relocateItems(offset);
 		}
 		else if(spriteY + spriteHeight > ResourceLoader.frameHeight)  {
 			int offset = -spriteY - spriteHeight + ResourceLoader.frameHeight;
 			//System.out.println("below: " + offset);
 			//System.out.println("newLocation: " + (spriteY+offset) + " expectedLocation: " + (ResourceLoader.frameHeight - spriteHeight));
+			relateScrollBar(offset);
 			relocateItems(offset);
 		}
 	}
@@ -141,5 +144,20 @@ public class Menu extends ArrayList<MenuItem> {
 			sprite = item.getHighlightedSprite();
 			sprite.setYAbsolute(newLocation);
 		}
+	}
+	
+	private void relateScrollBar(int offset) {
+		int heightDifference = totalHeight - ResourceLoader.frameHeight;
+		double percentage = (double)offset/(double)heightDifference;
+		int distance = (int)Math.round(percentage*(double)scrollBar.getMaxDistance());
+		scrollBar.relocate(distance);
+	}
+	
+	void setParentId(int id) {
+		parentId = id;
+	}
+	
+	int getParentId() {
+		return parentId;
 	}
 }

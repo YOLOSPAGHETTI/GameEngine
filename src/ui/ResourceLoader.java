@@ -16,8 +16,13 @@ public final class ResourceLoader {
 	// Screen Ids
 	public static final int startMenuScreen = 0;
 	public static final int inGameScreen = 1;
-	public static final int upgradesMenuScreen = 2;
-	public static final int settingsMenuScreen = 3;
+	public static final int inGamePauseMenuScreen = 2;
+	public static final int loadSavesMenuScreen = 3;
+	public static final int upgradesMenuScreen = 4;
+	public static final int settingsMenuScreen = 5;
+	public static final int videoSettingsMenuScreen = 6;
+	public static final int soundSettingsMenuScreen = 7;
+	public static final int controlsSettingsMenuScreen = 8;
 	
 	// Screen Size
 	public static int frameWidth;
@@ -89,6 +94,8 @@ public final class ResourceLoader {
     	Menu startMenu = new Menu();
     	MenuItem menuItem = new MenuItem("Play", inGameScreen, menuItemBaseFile, menuItemHighlightedFile, startMenu.size());
     	startMenu.add(menuItem);
+    	menuItem = new MenuItem("Load Saves", loadSavesMenuScreen, menuItemBaseFile, menuItemHighlightedFile, startMenu.size());
+    	startMenu.add(menuItem);
     	menuItem = new MenuItem("Upgrades", upgradesMenuScreen, menuItemBaseFile, menuItemHighlightedFile, startMenu.size());
     	startMenu.add(menuItem);
     	menuItem = new MenuItem("Settings", settingsMenuScreen, menuItemBaseFile, menuItemHighlightedFile, startMenu.size());
@@ -100,7 +107,8 @@ public final class ResourceLoader {
     	menus.put(startMenuScreen, startMenu);
     	
     	Menu upgradesMenu = new Menu();
-    	menuItem = new MenuItem("test", -1, menuItemBaseFile, menuItemHighlightedFile, upgradesMenu.size());
+    	upgradesMenu.setParentId(startMenuScreen);
+    	menuItem = new MenuItem("Back", startMenuScreen, menuItemBaseFile, menuItemHighlightedFile, upgradesMenu.size());
     	upgradesMenu.add(menuItem);
     	menuItem = new MenuItem("test1", -1, menuItemBaseFile, menuItemHighlightedFile, upgradesMenu.size());
     	upgradesMenu.add(menuItem);
@@ -119,6 +127,20 @@ public final class ResourceLoader {
     	checkAddScrollBar(upgradesMenu);
 
     	menus.put(upgradesMenuScreen, upgradesMenu);
+    	
+    	Menu settingsMenu = new Menu();
+    	settingsMenu.setParentId(startMenuScreen);
+    	menuItem = new MenuItem("Back", startMenuScreen, menuItemBaseFile, menuItemHighlightedFile, settingsMenu.size());
+    	settingsMenu.add(menuItem);
+    	menuItem = new MenuItem("Video", videoSettingsMenuScreen, menuItemBaseFile, menuItemHighlightedFile, settingsMenu.size());
+    	settingsMenu.add(menuItem);
+    	menuItem = new MenuItem("Sound", soundSettingsMenuScreen, menuItemBaseFile, menuItemHighlightedFile, settingsMenu.size());
+    	settingsMenu.add(menuItem);
+    	menuItem = new MenuItem("Controls", controlsSettingsMenuScreen, menuItemBaseFile, menuItemHighlightedFile, settingsMenu.size());
+    	settingsMenu.add(menuItem);
+    	checkAddScrollBar(settingsMenu);
+
+    	menus.put(settingsMenuScreen, settingsMenu);
     	
     	return menus;
     }

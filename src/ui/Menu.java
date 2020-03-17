@@ -139,7 +139,19 @@ public class Menu extends ArrayList<MenuItem> {
 	private void relocateItems(int offset) {
 		for(MenuItem item : this) {
 			Sprite sprite = item.getBaseSprite();
-			int newLocation = sprite.getY()+offset;
+			int index = item.getIndex();
+			int spriteY = sprite.getY();
+			Sprite scrollBarSprite = scrollBar.getBaseBarSprite();
+			if(scrollBarSprite.getY() == 0 && index == 0) {
+				//System.out.println("spriteY: " + spriteY);
+				offset = -spriteY;
+			}
+			else if(scrollBarSprite.getY() == scrollBar.getMaxDistance() && index == 0) {
+				//System.out.println("spriteY: " + spriteY + " totalHeight: " + totalHeight + " frameH: " + ResourceLoader.frameHeight);
+				offset = -spriteY + ResourceLoader.frameHeight - totalHeight;
+			}
+			int newLocation = spriteY+offset;
+			//System.out.println("newLocation: " + newLocation);
 			sprite.setYAbsolute(newLocation);
 			sprite = item.getHighlightedSprite();
 			sprite.setYAbsolute(newLocation);

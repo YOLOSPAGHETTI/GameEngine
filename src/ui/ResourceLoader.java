@@ -4,8 +4,11 @@ import java.awt.Dimension;
 
 import java.awt.Toolkit;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import game.Action;
+import game.StatusEffect;
 import ui.Menu;
 import ui.MenuItem;
 
@@ -14,20 +17,20 @@ public final class ResourceLoader {
 	private static final String pathSeparator = File.separator;
 	
 	// Screen Ids
-	public static final int startMenuScreen = 0;
-	public static final int inGameScreen = 1;
-	public static final int inGamePauseMenuScreen = 2;
-	public static final int loadSavesMenuScreen = 3;
-	public static final int upgradesMenuScreen = 4;
-	public static final int settingsMenuScreen = 5;
-	public static final int videoSettingsMenuScreen = 6;
-	public static final int soundSettingsMenuScreen = 7;
-	public static final int controlsSettingsMenuScreen = 8;
+	protected static final int startMenuScreen = 0;
+	protected static final int inGameScreen = 1;
+	protected static final int inGamePauseMenuScreen = 2;
+	protected static final int loadSavesMenuScreen = 3;
+	protected static final int upgradesMenuScreen = 4;
+	protected static final int settingsMenuScreen = 5;
+	protected static final int videoSettingsMenuScreen = 6;
+	protected static final int soundSettingsMenuScreen = 7;
+	protected static final int controlsSettingsMenuScreen = 8;
 	
 	// Screen Size
 	public static int frameWidth;
 	public static int frameHeight;
-	public static final String bgFile = "";
+	protected static final String bgFile = "";
 	
 	// Menus
 	private static final int minScrollBarHeight = 20;
@@ -38,6 +41,12 @@ public final class ResourceLoader {
 	private static String scrollBarBaseFile = workingDir + pathSeparator + "src/img/menu/scrollbar.jpg";
 	private static String scrollBarSelectedFile = workingDir + pathSeparator + "src/img/menu/selectedscrollbar.jpg";
 	
+	// Targets
+	public static final int player = 0;
+	public static final int enemy1 = 1;
+	public static final int enemy2 = 2;
+	public static final int enemy3 = 3;
+	
 	// Player data
 	private static int playerWidth;
 	private static int playerHeight;
@@ -47,29 +56,30 @@ public final class ResourceLoader {
 	private static Sprite playerStartSprite;
 	private static Sprite playerNextSprite;
 	
+	// Player animations
 	public static final PlayerAnimationController pac = new PlayerAnimationController();
 	private static final long playerIdleTime = 1000;
     private static final long playerCleaveTime = 500;
     private static final long playerStabTime = 800;
-    private static final long playerBlockTime = 100;
+    private static final long playerBlockTime = Long.MAX_VALUE;
     private static final long playerStunTime = 250;
-    public static Animation playerCleaveLeftAnimation;
-    public static Animation playerCleaveRightAnimation;
-    public static Animation playerStabLeftAnimation;
-    public static Animation playerStabMidAnimation;
-    public static Animation playerStabRightAnimation;
-    public static Animation playerBlockLeftAnimation;
-    public static Animation playerBlockMidAnimation;
-    public static Animation playerBlockRightAnimation;
-    public static Animation playerStunnedAnimation;
-    public static Animation playerIdleAnimation;
+    public static Action playerCleaveLeft;
+    public static Action playerCleaveRight;
+    public static Action playerStabLeft;
+    public static Action playerStabMid;
+    public static Action playerStabRight;
+    public static Action playerBlockLeft;
+    public static Action playerBlockMid;
+    public static Action playerBlockRight;
+    public static Action playerStunned;
+    public static Action playerIdle;
 
-    public static void useNativeResolution() {
+    protected static void useNativeResolution() {
     	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     	changeResolution(screenSize.width, screenSize.height);
     }
     
-    public static void changeResolution(int width, int height) {
+    protected static void changeResolution(int width, int height) {
     	frameWidth = width;
     	frameHeight = height;
     	
@@ -89,7 +99,14 @@ public final class ResourceLoader {
     	return true;
     }
     
-    public static HashMap<Integer,Menu> setupMenus() {
+    public static boolean actionIsBlock(Action action) {
+    	if(action == playerBlockLeft || action == playerBlockRight || action == playerBlockMid) {
+    		return true;
+    	}
+    	return false;
+    }
+    
+    protected static HashMap<Integer,Menu> setupMenus() {
     	HashMap<Integer,Menu> menus = new HashMap<Integer,Menu>();
     	Menu startMenu = new Menu();
     	MenuItem menuItem = new MenuItem("Play", inGameScreen, menuItemBaseFile, menuItemHighlightedFile, startMenu.size());
@@ -176,14 +193,56 @@ public final class ResourceLoader {
     	}
     }
     
-    public static void setupAnimations() {
-    	playerIdleAnimation = new Animation(playerIdleTime);
-    	playerIdleAnimation.add(playerStartSprite);
-    	playerIdleAnimation.add(playerNextSprite);
-    	playerIdleAnimation.calculateTimePerSprite();
+    protected static void setupActions() {
+    	int[] targets = {-1};
+    	ArrayList<StatusEffect> effects = new ArrayList<StatusEffect>();
+    	playerIdle = new Action(0,0,targets,effects,playerIdleTime);
+    	playerIdle.add(playerStartSprite);
+    	playerIdle.add(playerNextSprite);
+    	playerIdle.calculateTimePerSprite();
+    	
+    	playerCleaveLeft = new Action(0,0,targets,effects,playerCleaveTime);
+    	playerCleaveLeft.add(playerStartSprite);
+    	playerCleaveLeft.add(playerNextSprite);
+    	playerCleaveLeft.calculateTimePerSprite();
+    	
+    	playerCleaveRight = new Action(0,0,targets,effects,playerCleaveTime);
+    	playerCleaveRight.add(playerStartSprite);
+    	playerCleaveRight.add(playerNextSprite);
+    	playerCleaveRight.calculateTimePerSprite();
+    	
+    	playerStabLeft = new Action(0,0,targets,effects,playerStabTime);
+    	playerStabLeft.add(playerStartSprite);
+    	playerStabLeft.add(playerNextSprite);
+    	playerStabLeft.calculateTimePerSprite();
+    	
+    	playerStabRight = new Action(0,0,targets,effects,playerStabTime);
+    	playerStabRight.add(playerStartSprite);
+    	playerStabRight.add(playerNextSprite);
+    	playerStabRight.calculateTimePerSprite();
+    	
+    	playerStabMid = new Action(0,0,targets,effects,playerStabTime);
+    	playerStabMid.add(playerStartSprite);
+    	playerStabMid.add(playerNextSprite);
+    	playerStabMid.calculateTimePerSprite();
+    	
+    	playerBlockLeft = new Action(0,0,targets,effects,playerBlockTime);
+    	playerBlockLeft.add(playerStartSprite);
+    	playerBlockLeft.add(playerNextSprite);
+    	playerBlockLeft.calculateTimePerSprite();
+    	
+    	playerBlockRight = new Action(0,0,targets,effects,playerBlockTime);
+    	playerBlockRight.add(playerStartSprite);
+    	playerBlockRight.add(playerNextSprite);
+    	playerBlockRight.calculateTimePerSprite();
+    	
+    	playerBlockMid = new Action(0,0,targets,effects,playerBlockTime);
+    	playerBlockMid.add(playerStartSprite);
+    	playerBlockMid.add(playerNextSprite);
+    	playerBlockMid.calculateTimePerSprite();
     }
     
-    public static void replacePathSeparators() {
+    protected static void replacePathSeparators() {
     	if(!pathSeparator.equals("/")) {
     		menuItemBaseFile = menuItemBaseFile.replace("/", pathSeparator);
     		menuItemHighlightedFile = menuItemHighlightedFile.replace("/", pathSeparator);

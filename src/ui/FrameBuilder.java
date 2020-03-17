@@ -24,7 +24,7 @@ public class FrameBuilder extends JPanel
     private BufferedImage bgImage;
     
     private Thread animator;
-    private final int frameTime = 5;
+    private final int frameTime = 10;
     
     private MenuController mc;
     private PlayerAnimationController pac;

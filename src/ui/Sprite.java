@@ -19,7 +19,7 @@ public class Sprite {
     private int z;
     
     // Menu Item
-    public Sprite(String file, int menuSize) {
+    protected Sprite(String file, int menuSize) {
     	fileSource = file;
     	
     	loadImage();
@@ -32,7 +32,7 @@ public class Sprite {
     }
     
     // Scroll Edge
-    public Sprite(String file, boolean right) {
+    protected Sprite(String file, boolean right) {
     	fileSource = file;
     	
     	loadImage();
@@ -49,7 +49,7 @@ public class Sprite {
     }
     
     // Scroll Bar
-    public Sprite(String file, boolean right, int height, int width) {
+    protected Sprite(String file, boolean right, int height, int width) {
     	fileSource = file;
     	
     	loadImage();
@@ -66,7 +66,7 @@ public class Sprite {
     	y = 0;
     }
     
-    public Sprite(String file, int x, int y) {
+    protected Sprite(String file, int x, int y) {
     	fileSource = file;
     	this.x = x;
     	this.y = y;
@@ -75,7 +75,7 @@ public class Sprite {
     	maxY = ResourceLoader.frameHeight-height;
     }
     
-    public Sprite(String file, int x, int y, int width, int height) {
+    protected Sprite(String file, int x, int y, int width, int height) {
     	this(file, x, y);
     	
     	this.width = width;
@@ -84,7 +84,7 @@ public class Sprite {
     	maxY = ResourceLoader.frameHeight-height;
     }
     
-    public Sprite(String file, int x, int y, double scale) {
+    protected Sprite(String file, int x, int y, double scale) {
     	fileSource = file;
     	this.x = x;
     	this.y = y;
@@ -119,53 +119,53 @@ public class Sprite {
 		}
     }
 	
-	public String getFileSource() {
+	protected String getFileSource() {
 		return fileSource;
 	}
 	
-	public Image getImage() {
+	protected Image getImage() {
 		return img;
 	}
 	
-	public int getWidth() {
+	protected int getWidth() {
 		return width;
 	}
 	
-	public void setWidth(int width) {
+	protected void setWidth(int width) {
 		this.width = width;
 		maxX = ResourceLoader.frameWidth-width;
 	}
 	
-	public int getHeight() {
+	protected int getHeight() {
 		return height;
 	}
 	
-	public void setHeight(int height) {
+	protected void setHeight(int height) {
 		this.height = height;
 		maxY = ResourceLoader.frameHeight-height;
 	}
 	
-	public int getX() {
+	protected int getX() {
 		return x;
 	}
 	
-	public void setX(int x) {
+	protected void setX(int x) {
 		this.x = fixX(x);
 	}
 	
-	public void setXAbsolute(int x) {
+	protected void setXAbsolute(int x) {
 		this.x = x;
 	}
 	
-	public int getY() {
+	protected int getY() {
 		return y;
 	}
 	
-	public void setY(int y) {
+	protected void setY(int y) {
 		this.y = fixY(y);
 	}
 	
-	public void setYAbsolute(int y) {
+	protected void setYAbsolute(int y) {
 		this.y = y;
 	}
 	

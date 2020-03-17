@@ -8,22 +8,22 @@ public class Animation extends ArrayList<Sprite> {
     private Sprite currentSprite;
     private int index;
 
-    Animation(long duration) {
+    protected Animation(long duration) {
         this.duration = duration;
     }
     
-    public void calculateTimePerSprite() {
+    protected void calculateTimePerSprite() {
     	if(!this.isEmpty()) {
     		timePerSprite = duration/(long)this.size();
     	}
     }
 
-    public void runAnimation() {
+    protected void runAnimation() {
         index = 0;
         currentSprite = this.get(index);
     }
     
-    public boolean checkNextSprite(long frameTime) {
+    protected boolean checkNextSprite(long frameTime) {
     	spriteTime += frameTime;
     	// System.out.println(spriteTime);
     	if(spriteTime > timePerSprite) {
@@ -40,7 +40,7 @@ public class Animation extends ArrayList<Sprite> {
     	return false;
     }
 
-    public Sprite getCurrentSprite() {
+    protected Sprite getCurrentSprite() {
         return currentSprite;
     }
     

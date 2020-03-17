@@ -31,11 +31,11 @@ public class MenuItem {
 		int y = baseSprite.getY();
 		int width = baseSprite.getWidth();
 		int height = baseSprite.getHeight();
-		System.out.println("Destination: " + destination);
-		System.out.println("mouseX: " + mouseX + " mouseY: " + mouseY);
-		System.out.println("startx: " + x + " starty: " + y + " endx: " + (x+width) + " endy: " + (y+height));
+		//System.out.println("Destination: " + destination);
+		//System.out.println("mouseX: " + mouseX + " mouseY: " + mouseY);
+		//System.out.println("startx: " + x + " starty: " + y + " endx: " + (x+width) + " endy: " + (y+height));
 		if(mouseX >= x && mouseX <= x+width && mouseY >= y && mouseY <= y+height) {
-			System.out.println(true);
+			//System.out.println(true);
 			return true;
 		}
 		return false;

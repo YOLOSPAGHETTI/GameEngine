@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import game.Player;
 import ui.FrameController;
 import ui.MenuController;
-import ui.PlayerAnimationController;
 import ui.ResourceLoader;
 
 public class ControlHelper {
@@ -52,30 +51,47 @@ public class ControlHelper {
 	}
 	
 	void mouseDragged(MouseEvent e) {
-		int screen = fc.getScreen();
-		if(ResourceLoader.screenIsMenu(screen)) {
-			mc.checkHighlightedItem(e.getY());
+		if(e.getButton() == e.BUTTON1) {
+			int screen = fc.getScreen();
+			if(ResourceLoader.screenIsMenu(screen)) {
+				mc.checkHighlightedItem(e.getY());
+			}
+			else {
+				player.setDragStartCoordinates(e.getX(), e.getY());
+			}
 		}
 	}
 	
 	void mouseClicked(MouseEvent e) {
-		int screen = fc.getScreen();
-		if(ResourceLoader.screenIsMenu(screen)) {
-			mc.checkHighlightedItem(e.getY());
+		if(e.getButton() == e.BUTTON1) {
+			int screen = fc.getScreen();
+			if(ResourceLoader.screenIsMenu(screen)) {
+				mc.checkHighlightedItem(e.getY());
+			}
 		}
 	}
 	
 	void mousePressed(MouseEvent e) {
-		int screen = fc.getScreen();
-		if(ResourceLoader.screenIsMenu(screen)) {
-			mc.selectScrollBar(true, e.getY());
+		if(e.getButton() == e.BUTTON1) {
+			int screen = fc.getScreen();
+			if(ResourceLoader.screenIsMenu(screen)) {
+				mc.selectScrollBar(true, e.getY());
+			}
+			else {
+				player.block(e.getX());
+			}
 		}
 	}
 	
 	void mouseReleased(MouseEvent e) {
-		int screen = fc.getScreen();
-		if(ResourceLoader.screenIsMenu(screen)) {
-			mc.selectScrollBar(false, -1);
+		if(e.getButton() == e.BUTTON1) {
+			int screen = fc.getScreen();
+			if(ResourceLoader.screenIsMenu(screen)) {
+				mc.selectScrollBar(false, -1);
+			}
+			else {
+				player.determineAttack(e.getX(), e.getY());
+			}
 		}
 	}
 	

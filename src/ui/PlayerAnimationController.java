@@ -6,7 +6,7 @@ public class PlayerAnimationController extends AnimationController {
     }
     
     public void initialize() {
-    	idleAnimation = ResourceLoader.playerIdleAnimation;
+    	idleAnimation = ResourceLoader.playerIdle;
         currentAnimation = idleAnimation;
         runAnimation(currentAnimation);
     }

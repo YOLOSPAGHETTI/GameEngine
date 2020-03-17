@@ -18,7 +18,7 @@ public class FrameController extends JFrame {
 		ResourceLoader.useNativeResolution();
 		screen = ResourceLoader.startMenuScreen;
 		mc = new MenuController(this);
-		ResourceLoader.setupAnimations();
+		ResourceLoader.setupActions();
 		pac = player.getAnimationController();
     	pac.initialize();
 		ch = new ControlHelper(this, mc, player);
@@ -26,8 +26,11 @@ public class FrameController extends JFrame {
     }
     
     private void initUI() {
+    	setUndecorated(true);
+    	setExtendedState(JFrame.MAXIMIZED_BOTH);
+    	
     	fb = new FrameBuilder(this, mc, pac);
-        add(fb);         
+        add(fb);
         
         setResizable(false);
         pack();
@@ -35,8 +38,6 @@ public class FrameController extends JFrame {
         setTitle("Game");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
     
     public int getScreen() {

@@ -1,5 +1,7 @@
 package ui;
 
+import java.awt.image.BufferedImage;
+
 public class MenuScrollBar {
 	private boolean right;
 	private Sprite edgeBaseSprite;
@@ -10,8 +12,8 @@ public class MenuScrollBar {
 	private int selectedY;
 	private int maxDistance;
 	
-	public MenuScrollBar(String fileSourceEdgeBase, String fileSourceBarBase, String fileSourceEdgeHighlighted, 
-			String fileSourceBarSelected, boolean right, int height) {
+	public MenuScrollBar(BufferedImage fileSourceEdgeBase, BufferedImage fileSourceBarBase, BufferedImage fileSourceEdgeHighlighted, 
+			BufferedImage fileSourceBarSelected, boolean right, int height) {
 		edgeBaseSprite = new Sprite(fileSourceEdgeBase, right);
 		edgeHighlightedSprite = new Sprite(fileSourceEdgeHighlighted, right);
 		barBaseSprite = new Sprite(fileSourceBarBase, right, height, edgeBaseSprite.getWidth());

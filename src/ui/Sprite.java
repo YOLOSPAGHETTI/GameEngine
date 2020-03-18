@@ -2,15 +2,10 @@ package ui;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 public class Sprite {
 	private int maxX;
 	private int maxY;
-	private String fileSource;
 	private BufferedImage img;
 	private int width;
     private int height;
@@ -19,12 +14,10 @@ public class Sprite {
     private int z;
     
     // Menu Item
-    protected Sprite(String file, int menuSize) {
-    	fileSource = file;
-    	
-    	loadImage();
-    	
+    protected Sprite(BufferedImage img, int menuSize) {
+    	this.img = img;
     	width = ResourceLoader.frameWidth;
+    	height = img.getHeight();
     	maxX = ResourceLoader.frameWidth-width;
     	maxY = ResourceLoader.frameHeight-height;
     	x = 0;
@@ -32,10 +25,9 @@ public class Sprite {
     }
     
     // Scroll Edge
-    protected Sprite(String file, boolean right) {
-    	fileSource = file;
-    	
-    	loadImage();
+    protected Sprite(BufferedImage img, boolean right) {
+    	this.img = img;
+    	width = img.getWidth();
     	height = ResourceLoader.frameHeight;
     	maxX = ResourceLoader.frameWidth-width;
     	maxY = ResourceLoader.frameHeight-height;
@@ -49,79 +41,39 @@ public class Sprite {
     }
     
     // Scroll Bar
-    protected Sprite(String file, boolean right, int height, int width) {
-    	fileSource = file;
-    	
-    	loadImage();
+    protected Sprite(BufferedImage img, boolean right, int height, int width) {
+    	this.img = img;
     	this.height = height;
     	this.width = width;
     	maxX = ResourceLoader.frameWidth-width;
     	maxY = ResourceLoader.frameHeight-height;
     	if(right) {
-    		x=maxX;
+    		x = maxX;
     	}
     	else {
-    		x=0;
+    		x = 0;
     	}
     	y = 0;
     }
     
-    protected Sprite(String file, int x, int y) {
-    	fileSource = file;
+    protected Sprite(BufferedImage img, int x, int y) {
+    	this.img = img;
+    	width = img.getWidth();
+    	height = img.getHeight();
     	this.x = x;
     	this.y = y;
-    	loadImage();
     	maxX = ResourceLoader.frameWidth-width;
     	maxY = ResourceLoader.frameHeight-height;
     }
     
-    protected Sprite(String file, int x, int y, int width, int height) {
-    	this(file, x, y);
+    protected Sprite(BufferedImage img, int x, int y, int width, int height) {
+    	this(img, x, y);
     	
     	this.width = width;
     	this.height = height;
     	maxX = ResourceLoader.frameWidth-width;
     	maxY = ResourceLoader.frameHeight-height;
     }
-    
-    protected Sprite(String file, int x, int y, double scale) {
-    	fileSource = file;
-    	this.x = x;
-    	this.y = y;
-    	loadImage(scale);
-    	maxX = ResourceLoader.frameWidth-width;
-    	maxY = ResourceLoader.frameHeight-height;
-    }
-    
-	private void loadImage() {
-		try {
-			img = ImageIO.read(new File(fileSource));
-			if (width == 0) {
-	        	width = img.getWidth();
-	        }
-	        if (height == 0) {
-	        	height = img.getHeight();
-	        }
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-    }
-	
-	private void loadImage(double scale) {
-		try {
-			img = ImageIO.read(new File(fileSource));
-			width = (int) Math.round(img.getWidth() * scale);
-	        height = (int) Math.round(img.getHeight() * scale);
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-    }
-	
-	protected String getFileSource() {
-		return fileSource;
-	}
 	
 	protected Image getImage() {
 		return img;

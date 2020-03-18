@@ -1,5 +1,7 @@
 package ui;
 
+import java.awt.image.BufferedImage;
+
 public class MenuItem {
 	private String text;
 	private Sprite baseSprite;
@@ -7,17 +9,17 @@ public class MenuItem {
 	private int index;
 	private int destination;
 	
-	public MenuItem(String text, int destination, String fileSourceBase, String fileSourceHighlighted, int menuSize) {
-		baseSprite = new Sprite(fileSourceBase, menuSize);
-		highlightedSprite = new Sprite(fileSourceHighlighted, menuSize);
+	public MenuItem(String text, int destination, BufferedImage baseImage, BufferedImage highlightedImage, int menuSize) {
+		baseSprite = new Sprite(baseImage, menuSize);
+		highlightedSprite = new Sprite(highlightedImage, menuSize);
 		this.text = text;
 		this.destination = destination;
 		index = menuSize;
 	}
 	
-	public MenuItem(String text, int destination, String fileSourceBase, String fileSourceHighlighted, int menuSize, int x, int y) {
-		baseSprite = new Sprite(fileSourceBase, x, y);
-		highlightedSprite = new Sprite(fileSourceHighlighted, x, y);
+	public MenuItem(String text, int destination, BufferedImage baseImage, BufferedImage highlightedImage, int menuSize, int x, int y) {
+		baseSprite = new Sprite(baseImage, x, y);
+		highlightedSprite = new Sprite(highlightedImage, x, y);
 		this.destination = destination;
 		index = menuSize;
 	}

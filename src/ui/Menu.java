@@ -68,7 +68,9 @@ public class Menu extends ArrayList<MenuItem> {
 				itemHighlighted = menuItem;
 				scrollEdgeHighlighted = false;
 				scrollBarHighlighted = false;
-				scrollBar.setSelected(false, -1);
+				if(scrollBar != null) {
+					scrollBar.setSelected(false, -1);
+				}
 				break;
 			}
 		}
@@ -98,11 +100,16 @@ public class Menu extends ArrayList<MenuItem> {
 	}
 	
 	boolean isScrollBarSelected() {
-		return scrollBar.isSelected();
+		if(scrollBar != null) {
+			return scrollBar.isSelected();
+		}
+		return false;
 	}
 	
 	void setScrollBarSelected(boolean selected, int mouseY) {
-		scrollBar.setSelected(selected, mouseY);
+		if(scrollBar != null) {
+			scrollBar.setSelected(selected, mouseY);
+		}
 	}
 	
 	void moveScrollBar(int mouseY) {

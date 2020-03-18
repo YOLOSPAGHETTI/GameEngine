@@ -14,6 +14,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import game.ActionController;
 import ui.MenuItem;
 
 public class FrameBuilder extends JPanel
@@ -27,14 +28,13 @@ public class FrameBuilder extends JPanel
     private final int frameTime = 10;
     
     private MenuController mc;
-    private PlayerAnimationController pac;
+    private ActionController pac;
 
-    public FrameBuilder(FrameController fc, MenuController mc, PlayerAnimationController pac) {
+    public FrameBuilder(FrameController fc, MenuController mc, ActionController pac) {
     	this.fc = fc;
     	this.mc = mc;
     	this.pac = pac;
     	
-    	ResourceLoader.useNativeResolution();
         width = ResourceLoader.frameWidth;
         height = ResourceLoader.frameHeight;
         String bgFile = ResourceLoader.bgFile;
@@ -46,8 +46,6 @@ public class FrameBuilder extends JPanel
     private void buildFrame() {
     	setBackground(Color.green);
         setPreferredSize(new Dimension(width, height));
-        
-      // pac = ResourceLoader.pac;
     }
     
     @Override
@@ -120,7 +118,7 @@ public class FrameBuilder extends JPanel
 		return null;
     }
 
-    private void addEnemySprites(ArrayList<EnemyAnimationController> esArray) {
+    private void addEnemySprites(ArrayList<ActionController> esArray) {
         /*int enemyStart1X = maxX/3 - esArray.get(0).maxX/2;
         int enemyStart2X = maxX/2 - esArray.get(1).maxX/2;
         int enemyStart3X = (2*maxX)/3 - esArray.get(2).maxX/2;

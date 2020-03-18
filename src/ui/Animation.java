@@ -3,13 +3,15 @@ import java.util.ArrayList;
 
 public class Animation extends ArrayList<Sprite> {
     private long duration;
+    private int interruptLevel;
     private long timePerSprite;
     private long spriteTime;
     private Sprite currentSprite;
     private int index;
 
-    protected Animation(long duration) {
+    protected Animation(long duration, int interruptLevel) {
         this.duration = duration;
+        this.interruptLevel = interruptLevel;
     }
     
     protected void calculateTimePerSprite() {
@@ -17,13 +19,18 @@ public class Animation extends ArrayList<Sprite> {
     		timePerSprite = duration/(long)this.size();
     	}
     }
+    
+    protected void setTimePerSprite(long time) {
+    	timePerSprite = time;
+    }
 
-    protected void runAnimation() {
+    public void runAnimation() {
         index = 0;
         currentSprite = this.get(index);
+        spriteTime = 0;
     }
     
-    protected boolean checkNextSprite(long frameTime) {
+    public boolean checkNextSprite(long frameTime) {
     	spriteTime += frameTime;
     	// System.out.println(spriteTime);
     	if(spriteTime > timePerSprite) {
@@ -33,18 +40,24 @@ public class Animation extends ArrayList<Sprite> {
     			spriteTime = 0;
     		}
     		else {
-    			spriteTime = 0;
-    			return true;
+    			runAnimation();
+    			if(interruptLevel != 0) {
+    				return true;
+    			}
     		}
     	}
     	return false;
     }
 
-    protected Sprite getCurrentSprite() {
+    public Sprite getCurrentSprite() {
         return currentSprite;
     }
     
     void setIndex(int index) {
        this.index = index;
     }
+    
+    public int getInterruptLevel() {
+		return interruptLevel;
+	}
 }

@@ -33,6 +33,7 @@ public final class ResourceLoader {
 	protected static final String bgFile = "";
 	
 	// Menus
+	protected static HashMap<Integer,Menu> menus = new HashMap<Integer,Menu>();
 	private static final int minScrollBarHeight = 20;
 	private static String menuItemBaseFile = workingDir + pathSeparator + "src/img/menu/menuitem.jpg";
 	private static String menuItemHighlightedFile = workingDir + pathSeparator + "src/img/menu/highlightedmenuitem.jpg";
@@ -53,15 +54,12 @@ public final class ResourceLoader {
 	private static int playerStartX;
 	private static int playerStartY;
 	private static String playerStartFile = workingDir + pathSeparator + "src/img/player/germanic-knight.jpg";
-	private static Sprite playerStartSprite;
-	private static Sprite playerNextSprite;
 	
 	// Player animations
-	public static final PlayerAnimationController pac = new PlayerAnimationController();
 	private static final long playerIdleTime = 1000;
     private static final long playerCleaveTime = 500;
     private static final long playerStabTime = 800;
-    private static final long playerBlockTime = Long.MAX_VALUE;
+    private static final long playerBlockTime = 1000;
     private static final long playerStunTime = 250;
     public static Action playerCleaveLeft;
     public static Action playerCleaveRight;
@@ -74,12 +72,14 @@ public final class ResourceLoader {
     public static Action playerStunned;
     public static Action playerIdle;
 
-    protected static void useNativeResolution() {
+    public static void useNativeResolution() {
     	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     	changeResolution(screenSize.width, screenSize.height);
     }
     
     protected static void changeResolution(int width, int height) {
+    	System.out.println("changeRes");
+    	
     	frameWidth = width;
     	frameHeight = height;
     	
@@ -88,8 +88,8 @@ public final class ResourceLoader {
     	playerStartX = width/2 - playerWidth/2;
     	playerStartY = height - playerHeight - playerHeight/2;
     	
-    	playerStartSprite = new Sprite(playerStartFile, playerStartX, playerStartY, playerWidth, playerHeight);
-    	playerNextSprite = new Sprite(playerStartFile, playerStartX+10, playerStartY, playerWidth, playerHeight);
+    	setupMenus();
+    	setupActions();
     }
     
     public static boolean screenIsMenu(int screen) {
@@ -106,8 +106,7 @@ public final class ResourceLoader {
     	return false;
     }
     
-    protected static HashMap<Integer,Menu> setupMenus() {
-    	HashMap<Integer,Menu> menus = new HashMap<Integer,Menu>();
+    private static void setupMenus() {
     	Menu startMenu = new Menu();
     	MenuItem menuItem = new MenuItem("Play", inGameScreen, menuItemBaseFile, menuItemHighlightedFile, startMenu.size());
     	startMenu.add(menuItem);
@@ -158,8 +157,7 @@ public final class ResourceLoader {
     	checkAddScrollBar(settingsMenu);
 
     	menus.put(settingsMenuScreen, settingsMenu);
-    	
-    	return menus;
+    	System.out.println("menus done");
     }
     
     private static void checkAddScrollBar(Menu menu) {
@@ -193,56 +191,107 @@ public final class ResourceLoader {
     	}
     }
     
-    protected static void setupActions() {
+    private static void setupActions() {    	
     	int[] targets = {-1};
     	ArrayList<StatusEffect> effects = new ArrayList<StatusEffect>();
-    	playerIdle = new Action(0,0,targets,effects,playerIdleTime);
-    	playerIdle.add(playerStartSprite);
-    	playerIdle.add(playerNextSprite);
+    	playerIdle = new Action(0, 0, targets, effects, 0, playerIdleTime);
+    	playerIdle.add(new Sprite(playerStartFile, playerStartX, playerStartY, playerWidth, playerHeight));
+    	playerIdle.add(new Sprite(playerStartFile, playerStartX+20, playerStartY, playerWidth, playerHeight));
+    	playerIdle.add(new Sprite(playerStartFile, playerStartX, playerStartY, playerWidth, playerHeight));
+    	playerIdle.add(new Sprite(playerStartFile, playerStartX-20, playerStartY, playerWidth, playerHeight));
+    	playerIdle.add(new Sprite(playerStartFile, playerStartX, playerStartY, playerWidth, playerHeight));
     	playerIdle.calculateTimePerSprite();
+    	System.out.println("idle done");
     	
-    	playerCleaveLeft = new Action(0,0,targets,effects,playerCleaveTime);
-    	playerCleaveLeft.add(playerStartSprite);
-    	playerCleaveLeft.add(playerNextSprite);
+    	playerCleaveLeft = new Action(0, 0, targets, effects, 1, playerCleaveTime);
+    	playerCleaveLeft.add(new Sprite(playerStartFile, playerStartX, playerStartY, playerWidth, playerHeight));
+    	playerCleaveLeft.add(new Sprite(playerStartFile, playerStartX+20, playerStartY+20, playerWidth, playerHeight));
+    	playerCleaveLeft.add(new Sprite(playerStartFile, playerStartX+40, playerStartY+40, playerWidth, playerHeight));
+    	playerCleaveLeft.add(new Sprite(playerStartFile, playerStartX+60, playerStartY+60, playerWidth, playerHeight));
+    	playerCleaveLeft.add(new Sprite(playerStartFile, playerStartX+40, playerStartY+60, playerWidth, playerHeight));
+    	playerCleaveLeft.add(new Sprite(playerStartFile, playerStartX+20, playerStartY+60, playerWidth, playerHeight));
+    	playerCleaveLeft.add(new Sprite(playerStartFile, playerStartX, playerStartY+60, playerWidth, playerHeight));
+    	playerCleaveLeft.add(new Sprite(playerStartFile, playerStartX-20, playerStartY+60, playerWidth, playerHeight));
+    	playerCleaveLeft.add(new Sprite(playerStartFile, playerStartX-40, playerStartY+60, playerWidth, playerHeight));
+    	playerCleaveLeft.add(new Sprite(playerStartFile, playerStartX-60, playerStartY+60, playerWidth, playerHeight));
+    	playerCleaveLeft.add(new Sprite(playerStartFile, playerStartX-40, playerStartY+40, playerWidth, playerHeight));
+    	playerCleaveLeft.add(new Sprite(playerStartFile, playerStartX-20, playerStartY+20, playerWidth, playerHeight));
+    	playerCleaveLeft.add(new Sprite(playerStartFile, playerStartX, playerStartY, playerWidth, playerHeight));
     	playerCleaveLeft.calculateTimePerSprite();
     	
-    	playerCleaveRight = new Action(0,0,targets,effects,playerCleaveTime);
-    	playerCleaveRight.add(playerStartSprite);
-    	playerCleaveRight.add(playerNextSprite);
+    	playerCleaveRight = new Action(0, 0, targets, effects, 1, playerCleaveTime);
+    	playerCleaveRight.add(new Sprite(playerStartFile, playerStartX, playerStartY, playerWidth, playerHeight));
+    	playerCleaveRight.add(new Sprite(playerStartFile, playerStartX-20, playerStartY+20, playerWidth, playerHeight));
+    	playerCleaveRight.add(new Sprite(playerStartFile, playerStartX-40, playerStartY+40, playerWidth, playerHeight));
+    	playerCleaveRight.add(new Sprite(playerStartFile, playerStartX-60, playerStartY+60, playerWidth, playerHeight));
+    	playerCleaveRight.add(new Sprite(playerStartFile, playerStartX-40, playerStartY+60, playerWidth, playerHeight));
+    	playerCleaveRight.add(new Sprite(playerStartFile, playerStartX-20, playerStartY+60, playerWidth, playerHeight));
+    	playerCleaveRight.add(new Sprite(playerStartFile, playerStartX, playerStartY+60, playerWidth, playerHeight));
+    	playerCleaveRight.add(new Sprite(playerStartFile, playerStartX+20, playerStartY+60, playerWidth, playerHeight));
+    	playerCleaveRight.add(new Sprite(playerStartFile, playerStartX+40, playerStartY+60, playerWidth, playerHeight));
+    	playerCleaveRight.add(new Sprite(playerStartFile, playerStartX+60, playerStartY+60, playerWidth, playerHeight));
+    	playerCleaveRight.add(new Sprite(playerStartFile, playerStartX+40, playerStartY+40, playerWidth, playerHeight));
+    	playerCleaveRight.add(new Sprite(playerStartFile, playerStartX+20, playerStartY+20, playerWidth, playerHeight));
+    	playerCleaveRight.add(new Sprite(playerStartFile, playerStartX, playerStartY, playerWidth, playerHeight));
     	playerCleaveRight.calculateTimePerSprite();
+    	System.out.println("cleave done");
     	
-    	playerStabLeft = new Action(0,0,targets,effects,playerStabTime);
-    	playerStabLeft.add(playerStartSprite);
-    	playerStabLeft.add(playerNextSprite);
+    	playerStabLeft = new Action(0, 0, targets, effects, 2, playerStabTime);
+    	playerStabLeft.add(new Sprite(playerStartFile, playerStartX, playerStartY, playerWidth, playerHeight));
+    	playerStabLeft.add(new Sprite(playerStartFile, playerStartX+20, playerStartY-20, playerWidth, playerHeight));
+    	playerStabLeft.add(new Sprite(playerStartFile, playerStartX, playerStartY, playerWidth, playerHeight));
+    	playerStabLeft.add(new Sprite(playerStartFile, playerStartX-20, playerStartY+20, playerWidth, playerHeight));
+    	playerStabLeft.add(new Sprite(playerStartFile, playerStartX-40, playerStartY+40, playerWidth, playerHeight));
+    	playerStabLeft.add(new Sprite(playerStartFile, playerStartX-60, playerStartY+60, playerWidth, playerHeight));
+    	playerStabLeft.add(new Sprite(playerStartFile, playerStartX-40, playerStartY+40, playerWidth, playerHeight));
+    	playerStabLeft.add(new Sprite(playerStartFile, playerStartX-20, playerStartY+20, playerWidth, playerHeight));
+    	playerStabLeft.add(new Sprite(playerStartFile, playerStartX, playerStartY, playerWidth, playerHeight));
     	playerStabLeft.calculateTimePerSprite();
     	
-    	playerStabRight = new Action(0,0,targets,effects,playerStabTime);
-    	playerStabRight.add(playerStartSprite);
-    	playerStabRight.add(playerNextSprite);
+    	playerStabRight = new Action(0, 0, targets, effects, 2, playerStabTime);
+    	playerStabRight.add(new Sprite(playerStartFile, playerStartX, playerStartY, playerWidth, playerHeight));
+    	playerStabRight.add(new Sprite(playerStartFile, playerStartX-20, playerStartY-20, playerWidth, playerHeight));
+    	playerStabRight.add(new Sprite(playerStartFile, playerStartX, playerStartY, playerWidth, playerHeight));
+    	playerStabRight.add(new Sprite(playerStartFile, playerStartX+20, playerStartY+20, playerWidth, playerHeight));
+    	playerStabRight.add(new Sprite(playerStartFile, playerStartX+40, playerStartY+40, playerWidth, playerHeight));
+    	playerStabRight.add(new Sprite(playerStartFile, playerStartX+60, playerStartY+60, playerWidth, playerHeight));
+    	playerStabRight.add(new Sprite(playerStartFile, playerStartX+40, playerStartY+40, playerWidth, playerHeight));
+    	playerStabRight.add(new Sprite(playerStartFile, playerStartX+20, playerStartY+20, playerWidth, playerHeight));
+    	playerStabRight.add(new Sprite(playerStartFile, playerStartX, playerStartY, playerWidth, playerHeight));
     	playerStabRight.calculateTimePerSprite();
     	
-    	playerStabMid = new Action(0,0,targets,effects,playerStabTime);
-    	playerStabMid.add(playerStartSprite);
-    	playerStabMid.add(playerNextSprite);
+    	playerStabMid = new Action(0, 0, targets, effects, 2, playerStabTime);
+    	playerStabMid.add(new Sprite(playerStartFile, playerStartX, playerStartY, playerWidth, playerHeight));
+    	playerStabMid.add(new Sprite(playerStartFile, playerStartX, playerStartY-20, playerWidth, playerHeight));
+    	playerStabMid.add(new Sprite(playerStartFile, playerStartX, playerStartY, playerWidth, playerHeight));
+    	playerStabMid.add(new Sprite(playerStartFile, playerStartX, playerStartY+20, playerWidth, playerHeight));
+    	playerStabMid.add(new Sprite(playerStartFile, playerStartX, playerStartY+40, playerWidth, playerHeight));
+    	playerStabMid.add(new Sprite(playerStartFile, playerStartX, playerStartY+60, playerWidth, playerHeight));
+    	playerStabMid.add(new Sprite(playerStartFile, playerStartX, playerStartY+40, playerWidth, playerHeight));
+    	playerStabMid.add(new Sprite(playerStartFile, playerStartX, playerStartY+20, playerWidth, playerHeight));
+    	playerStabMid.add(new Sprite(playerStartFile, playerStartX, playerStartY, playerWidth, playerHeight));
     	playerStabMid.calculateTimePerSprite();
     	
-    	playerBlockLeft = new Action(0,0,targets,effects,playerBlockTime);
-    	playerBlockLeft.add(playerStartSprite);
-    	playerBlockLeft.add(playerNextSprite);
+    	System.out.println("stab done");
+    	playerBlockLeft = new Action(0, 0, targets, effects, 0, playerBlockTime);
+    	playerBlockLeft.add(new Sprite(playerStartFile, playerStartX-20, playerStartY+20, playerWidth, playerHeight));
+    	playerBlockLeft.add(new Sprite(playerStartFile, playerStartX, playerStartY, playerWidth, playerHeight));
     	playerBlockLeft.calculateTimePerSprite();
     	
-    	playerBlockRight = new Action(0,0,targets,effects,playerBlockTime);
-    	playerBlockRight.add(playerStartSprite);
-    	playerBlockRight.add(playerNextSprite);
+    	playerBlockRight = new Action(0, 0, targets, effects, 0, playerBlockTime);
+    	playerBlockRight.add(new Sprite(playerStartFile, playerStartX+20, playerStartY+20, playerWidth, playerHeight));
+    	playerBlockRight.add(new Sprite(playerStartFile, playerStartX, playerStartY, playerWidth, playerHeight));
     	playerBlockRight.calculateTimePerSprite();
     	
-    	playerBlockMid = new Action(0,0,targets,effects,playerBlockTime);
-    	playerBlockMid.add(playerStartSprite);
-    	playerBlockMid.add(playerNextSprite);
+    	playerBlockMid = new Action(0, 0, targets, effects, 0, playerBlockTime);
+    	playerBlockMid.add(new Sprite(playerStartFile, playerStartX, playerStartY+20, playerWidth, playerHeight));
+    	playerBlockMid.add(new Sprite(playerStartFile, playerStartX, playerStartY, playerWidth, playerHeight));
     	playerBlockMid.calculateTimePerSprite();
+    	
+    	System.out.println("actions done");
     }
     
-    protected static void replacePathSeparators() {
+    public static void replacePathSeparators() {
     	if(!pathSeparator.equals("/")) {
     		menuItemBaseFile = menuItemBaseFile.replace("/", pathSeparator);
     		menuItemHighlightedFile = menuItemHighlightedFile.replace("/", pathSeparator);

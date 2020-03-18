@@ -7,7 +7,7 @@ public class MenuController {
 	private FrameController fc;
 	
 	public MenuController(FrameController fc) {
-		menus = ResourceLoader.setupMenus();
+		menus = ResourceLoader.menus;
 		this.fc = fc;
 	}
 	

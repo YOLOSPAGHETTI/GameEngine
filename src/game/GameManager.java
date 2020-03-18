@@ -3,7 +3,6 @@ package game;
 import java.awt.EventQueue;
 
 import ui.FrameController;
-import ui.PlayerAnimationController;
 import ui.ResourceLoader;
 
 public class GameManager {
@@ -11,7 +10,9 @@ public class GameManager {
 	private static Player player;
 	
 	public static void main(String[] args) {
-		PlayerAnimationController pac = ResourceLoader.pac;
+		ResourceLoader.replacePathSeparators();
+		ResourceLoader.useNativeResolution();
+		ActionController pac = new ActionController(ResourceLoader.playerIdle);
 		player = new Player(pac);
 		
         EventQueue.invokeLater(() -> {

@@ -3,6 +3,7 @@ package ui;
 import javax.swing.JFrame;
 
 import controls.ControlHelper;
+import game.ActionController;
 import game.Player;
 
 public class FrameController extends JFrame {
@@ -10,17 +11,13 @@ public class FrameController extends JFrame {
 	private int screen;
 	private ControlHelper ch;
 	private MenuController mc;
-	private PlayerAnimationController pac;
+	private ActionController pac;
 	private FrameBuilder fb;
 	
 	public FrameController(Player player) {
-		ResourceLoader.replacePathSeparators();
-		ResourceLoader.useNativeResolution();
 		screen = ResourceLoader.startMenuScreen;
 		mc = new MenuController(this);
-		ResourceLoader.setupActions();
 		pac = player.getAnimationController();
-    	pac.initialize();
 		ch = new ControlHelper(this, mc, player);
         initUI();
     }

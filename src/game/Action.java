@@ -10,8 +10,8 @@ public class Action extends Animation {
 	private int[] targets;
 	private ArrayList<StatusEffect> effects;
 	
-	public Action(int damageMin, int damageMax, int[] targets, ArrayList<StatusEffect> effects, long duration) {
-		super(duration);
+	public Action(int damageMin, int damageMax, int[] targets, ArrayList<StatusEffect> effects, int interruptLevel, long duration) {
+		super(duration, interruptLevel);
 		this.damageMin = damageMin;
 		this.damageMax = damageMax;
 		this.targets = targets;

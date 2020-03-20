@@ -40,6 +40,23 @@ public class Sprite {
     	y = 0;
     }
     
+    // Player Health Bar
+    protected Sprite(BufferedImage img, boolean right, int z) {
+    	this.img = img;
+    	width = img.getWidth();
+    	height = ResourceLoader.frameHeight;
+    	maxX = ResourceLoader.frameWidth-width;
+    	maxY = ResourceLoader.frameHeight-height;
+    	if(right) {
+    		x=maxX;
+    	}
+    	else {
+    		x=0;
+    	}
+    	y = 0;
+    	this.z = z;
+    }
+    
     // Scroll Bar
     protected Sprite(BufferedImage img, boolean right, int height, int width) {
     	this.img = img;
@@ -79,7 +96,7 @@ public class Sprite {
 		return img;
 	}
 	
-	protected int getWidth() {
+	public int getWidth() {
 		return width;
 	}
 	
@@ -88,7 +105,7 @@ public class Sprite {
 		maxX = ResourceLoader.frameWidth-width;
 	}
 	
-	protected int getHeight() {
+	public int getHeight() {
 		return height;
 	}
 	
@@ -97,7 +114,7 @@ public class Sprite {
 		maxY = ResourceLoader.frameHeight-height;
 	}
 	
-	protected int getX() {
+	public int getX() {
 		return x;
 	}
 	
@@ -109,12 +126,16 @@ public class Sprite {
 		this.x = x;
 	}
 	
-	protected int getY() {
+	public int getY() {
 		return y;
 	}
 	
 	protected void setY(int y) {
 		this.y = fixY(y);
+	}
+	
+	public int getZ() {
+		return z;
 	}
 	
 	protected void setYAbsolute(int y) {

@@ -17,6 +17,7 @@ public class ControlHelper {
 	private ArrayList<String> controls;
 	private ArrayList<String> keyboardControls;
 	private ArrayList<String> mouseControls;
+	private int lastMouseButton;
 	
 	public ControlHelper(FrameController fc, MenuController mc, Player player) {
 		this.fc = fc;
@@ -51,7 +52,7 @@ public class ControlHelper {
 	}
 	
 	void mouseDragged(MouseEvent e) {
-		if(e.getButton() == e.BUTTON1) {
+		if(lastMouseButton == MouseEvent.BUTTON1) {
 			int screen = fc.getScreen();
 			if(ResourceLoader.screenIsMenu(screen)) {
 				mc.checkHighlightedItem(e.getY());
@@ -63,7 +64,7 @@ public class ControlHelper {
 	}
 	
 	void mouseClicked(MouseEvent e) {
-		if(e.getButton() == e.BUTTON1) {
+		if(e.getButton() == MouseEvent.BUTTON1) {
 			int screen = fc.getScreen();
 			if(ResourceLoader.screenIsMenu(screen)) {
 				mc.checkHighlightedItem(e.getY());
@@ -72,7 +73,8 @@ public class ControlHelper {
 	}
 	
 	void mousePressed(MouseEvent e) {
-		if(e.getButton() == e.BUTTON1) {
+		lastMouseButton = e.getButton();
+		if(e.getButton() == MouseEvent.BUTTON1) {
 			int screen = fc.getScreen();
 			if(ResourceLoader.screenIsMenu(screen)) {
 				mc.selectScrollBar(true, e.getY());
@@ -84,7 +86,7 @@ public class ControlHelper {
 	}
 	
 	void mouseReleased(MouseEvent e) {
-		if(e.getButton() == e.BUTTON1) {
+		if(e.getButton() == MouseEvent.BUTTON1) {
 			int screen = fc.getScreen();
 			if(ResourceLoader.screenIsMenu(screen)) {
 				mc.selectScrollBar(false, -1);
@@ -96,6 +98,13 @@ public class ControlHelper {
 	}
 	
 	void mouseExited(MouseEvent e) {
+		int screen = fc.getScreen();
+		if(ResourceLoader.screenIsMenu(screen)) {
+			mc.nullifyHighlightedItem();
+		}
+	}
+	
+	void mouseWheelMoved(MouseEvent e) {
 		int screen = fc.getScreen();
 		if(ResourceLoader.screenIsMenu(screen)) {
 			mc.nullifyHighlightedItem();

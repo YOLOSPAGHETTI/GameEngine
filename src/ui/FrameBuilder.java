@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import game.ActionController;
+import game.Player;
 import ui.MenuItem;
 
 public class FrameBuilder extends JPanel
@@ -28,12 +29,14 @@ public class FrameBuilder extends JPanel
     private final int frameTime = 10;
     
     private MenuController mc;
+    private Player player;
     private ActionController pac;
 
-    public FrameBuilder(FrameController fc, MenuController mc, ActionController pac) {
+    public FrameBuilder(FrameController fc, MenuController mc, Player player) {
     	this.fc = fc;
     	this.mc = mc;
-    	this.pac = pac;
+    	this.player = player;
+    	this.pac = player.getActionController();
     	
         width = ResourceLoader.frameWidth;
         height = ResourceLoader.frameHeight;
@@ -70,41 +73,56 @@ public class FrameBuilder extends JPanel
     		Menu menu = mc.getMenus().get(screen);
     		
     		if(menu != null) {
-	    		for(MenuItem menuItem : menu) {
-	            	if(menuItem.equals(menu.getHighlighted())) {
-	            		addSprite(g, menuItem.getHighlightedSprite(), menuItem.getText());
-	            	}
-	            	else {
-	            		addSprite(g, menuItem.getBaseSprite(), menuItem.getText());
-	            	}
-	            }
-	    		MenuScrollBar menuScrollBar = menu.getScrollBar();
-	    		if(menuScrollBar != null) {
-	    			if(menu.isScrollEdgeHighlighted()) {
-	            		addSprite(g, menuScrollBar.getHighlightedEdgeSprite());
-	            		if(menu.isScrollBarSelected()) {
-	            			addSprite(g, menuScrollBar.getSelectedBarSprite());
-	            		}
-	            		else {
-	            			addSprite(g, menuScrollBar.getBaseBarSprite());
-	            		}
-	            	}
-	            	else {
-	            		addSprite(g, menuScrollBar.getBaseEdgeSprite());
-	            		addSprite(g, menuScrollBar.getBaseBarSprite());
-	            	}
-	    		}
+    			drawMenu(g, menu);
     		}
     	}
     	else if(screen == ResourceLoader.inGameScreen) {
-    		if(bgImage != null) {
-    			g.drawImage(bgImage, 0, 0, null);
-    		}
-        	
-	        Sprite playerSprite = pac.getCurrentSprite();
-	        addSprite(g, playerSprite);
-	        Toolkit.getDefaultToolkit().sync();
+    		drawGame(g);
         }
+    	Toolkit.getDefaultToolkit().sync();
+    }
+    
+    private void drawMenu(Graphics g, Menu menu) {
+		for(int i=0; i<=ResourceLoader.topLayer; i++) {
+    		for(MenuItem menuItem : menu) {
+            	if(menuItem.equals(menu.getHighlighted())) {
+            		addSprite(g, menuItem.getHighlightedSprite(), menuItem.getText(), i);
+            	}
+            	else {
+            		addSprite(g, menuItem.getBaseSprite(), menuItem.getText(), i);
+            	}
+            }
+    		MenuScrollBar menuScrollBar = menu.getScrollBar();
+    		if(menuScrollBar != null) {
+    			if(menu.isScrollEdgeHighlighted()) {
+            		addSprite(g, menuScrollBar.getHighlightedEdgeSprite(), i);
+            		if(menu.isScrollBarSelected()) {
+            			addSprite(g, menuScrollBar.getSelectedBarSprite(), i);
+            		}
+            		else {
+            			addSprite(g, menuScrollBar.getBaseBarSprite(), i);
+            		}
+            	}
+            	else {
+            		addSprite(g, menuScrollBar.getBaseEdgeSprite(), i);
+            		addSprite(g, menuScrollBar.getBaseBarSprite(), i);
+            	}
+    		}
+		}
+    }
+    
+    private void drawGame(Graphics g) {
+    	for(int i=0; i<=ResourceLoader.topLayer; i++) {
+	    	if(bgImage != null) {
+				g.drawImage(bgImage, 0, 0, null);
+			}
+	    	
+	        Sprite playerSprite = pac.getCurrentSprite();
+	        HealthBar playerHealthBar = player.getHealthBar();
+	        addSprite(g, playerSprite, i);
+	        addSprite(g, playerHealthBar.getPositiveBarSprite(), i);
+	        addSprite(g, playerHealthBar.getNegativeBarSprite(), i);
+    	}
     }
     
     private BufferedImage loadImage(String file) {
@@ -126,18 +144,21 @@ public class FrameBuilder extends JPanel
         int enemyYDiff = esArray.get(0).maxY;*/
     }
 
-    private void addSprite(Graphics g, Sprite sprite) {
+    private void addSprite(Graphics g, Sprite sprite, int currentLayer) {
     	int spriteX = sprite.getX();
     	int spriteY = sprite.getY();
+    	int spriteZ = sprite.getZ();
     	int spriteWidth = sprite.getWidth();
     	int spriteHeight = sprite.getHeight();
     	//System.out.println("x: " + spriteX + " y: " + spriteY);
     	//System.out.println("width: " + spriteWidth + " height: " + spriteHeight);
-		g.drawImage(sprite.getImage(), spriteX, spriteY, spriteWidth, spriteHeight, null);
+    	if(currentLayer == spriteZ) {
+    		g.drawImage(sprite.getImage(), spriteX, spriteY, spriteWidth, spriteHeight, null);
+    	}
 	}
     
-    private void addSprite(Graphics g, Sprite sprite, String text) {
-    	addSprite(g, sprite);
+    private void addSprite(Graphics g, Sprite sprite, String text, int currentLayer) {
+    	addSprite(g, sprite, currentLayer);
     	
     	int spriteX = sprite.getX();
     	int spriteY = sprite.getY();

@@ -1,25 +1,45 @@
 package game;
 
+import ui.HealthBar;
+
 public class Entity {
 	private int hp;
+	private HealthBar healthBar;
 	private boolean isDead;
 	
-	public int getHp() {
+	void setHp(int hp) {
+		this.hp = hp;
+	}
+	
+	int getHp() {
 		return hp;
 	}
 	
 	public void takeDamage(int damage) {
 		hp -= damage;
-		if(hp <= 0) {
+		if(hp < 0) {
+			hp = 0;
+		}
+		healthBar.setSize(hp);
+		if(hp == 0) {
 			isDead = true;
 		}
 	}
 	
-	public void heal(int health) {
+	void heal(int health) {
 		hp += health;
+		healthBar.setSize(hp);
 	}
 	
-	public boolean isDead() {
+	boolean isDead() {
 		return isDead;
+	}
+	
+	void setHealthBar(HealthBar healthBar) {
+		this.healthBar = healthBar;
+	}
+	
+	public HealthBar getHealthBar() {
+		return healthBar;
 	}
 }

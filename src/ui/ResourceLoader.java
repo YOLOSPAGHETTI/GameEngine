@@ -36,6 +36,11 @@ public final class ResourceLoader {
 	public static int frameHeight;
 	protected static final String bgFile = "";
 	
+	// Layers
+	public static final int bottomLayer = 0;
+	public static final int midLayer = 1;
+	public static final int topLayer = 2;
+	
 	// Menus
 	protected static HashMap<Integer,Menu> menus = new HashMap<Integer,Menu>();
 	private static final int minScrollBarHeight = 20;
@@ -75,6 +80,18 @@ public final class ResourceLoader {
     public static Action playerBlockRight;
     public static Action playerStunned;
     public static Action playerIdle;
+    
+    public static final int baseCleaveDamage = 7;
+    public static final int baseStabDamage = 15;
+    public static final int baseShieldDamageBlock = 10;
+    public static final int baseArmorDamageBlock = 0;
+    public static final int baseHealth = 50;
+    
+    // Health Bars
+ 	private static String healthBarPositiveFile = workingDir + pathSeparator + "src/img/player/player_health_bar_positive.jpg";
+ 	private static String healthBarNegativeFile = workingDir + pathSeparator + "src/img/player/player_health_bar_negative.jpg";
+ 	public static BufferedImage healthBarPositive;
+ 	public static BufferedImage healthBarNegative;
 
     public static void useNativeResolution() {
     	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -82,7 +99,7 @@ public final class ResourceLoader {
     }
     
     protected static void changeResolution(int width, int height) {
-    	System.out.println("changeRes");
+    	//System.out.println("changeRes");
     	
     	frameWidth = width;
     	frameHeight = height;
@@ -94,6 +111,9 @@ public final class ResourceLoader {
     	
     	setupMenus();
     	setupActions();
+    	
+    	healthBarPositive = loadImage(healthBarPositiveFile);
+    	healthBarNegative = loadImage(healthBarNegativeFile);
     }
     
     public static boolean screenIsMenu(int screen) {
@@ -133,19 +153,27 @@ public final class ResourceLoader {
     	upgradesMenu.setParentId(startMenuScreen);
     	menuItem = new MenuItem("Back", startMenuScreen, menuItemBaseImage, menuItemHighlightedImage, upgradesMenu.size());
     	upgradesMenu.add(menuItem);
-    	menuItem = new MenuItem("test1", -1, menuItemBaseImage, menuItemHighlightedImage, upgradesMenu.size());
+    	menuItem = new MenuItem("Health", upgradesMenuScreen, menuItemBaseImage, menuItemHighlightedImage, upgradesMenu.size());
     	upgradesMenu.add(menuItem);
-    	menuItem = new MenuItem("test2", -1, menuItemBaseImage, menuItemHighlightedImage, upgradesMenu.size());
+    	menuItem = new MenuItem("Cleave Damage", upgradesMenuScreen, menuItemBaseImage, menuItemHighlightedImage, upgradesMenu.size());
     	upgradesMenu.add(menuItem);
-    	menuItem = new MenuItem("test", -1, menuItemBaseImage, menuItemHighlightedImage, upgradesMenu.size());
+    	menuItem = new MenuItem("Stab Damage", upgradesMenuScreen, menuItemBaseImage, menuItemHighlightedImage, upgradesMenu.size());
     	upgradesMenu.add(menuItem);
-    	menuItem = new MenuItem("test", -1, menuItemBaseImage, menuItemHighlightedImage, upgradesMenu.size());
+    	menuItem = new MenuItem("Shield Damage Block", upgradesMenuScreen, menuItemBaseImage, menuItemHighlightedImage, upgradesMenu.size());
     	upgradesMenu.add(menuItem);
-    	menuItem = new MenuItem("test4", -1, menuItemBaseImage, menuItemHighlightedImage, upgradesMenu.size());
+    	menuItem = new MenuItem("Armor Damage Block", upgradesMenuScreen, menuItemBaseImage, menuItemHighlightedImage, upgradesMenu.size());
     	upgradesMenu.add(menuItem);
-    	menuItem = new MenuItem("test", -1, menuItemBaseImage, menuItemHighlightedImage, upgradesMenu.size());
+    	menuItem = new MenuItem("Bleed Damage", upgradesMenuScreen, menuItemBaseImage, menuItemHighlightedImage, upgradesMenu.size());
     	upgradesMenu.add(menuItem);
-    	menuItem = new MenuItem("test6", -1, menuItemBaseImage, menuItemHighlightedImage, upgradesMenu.size());
+    	menuItem = new MenuItem("Crit Chance", upgradesMenuScreen, menuItemBaseImage, menuItemHighlightedImage, upgradesMenu.size());
+    	upgradesMenu.add(menuItem);
+    	menuItem = new MenuItem("Multiplier Crit", upgradesMenuScreen, menuItemBaseImage, menuItemHighlightedImage, upgradesMenu.size());
+    	upgradesMenu.add(menuItem);
+    	menuItem = new MenuItem("Accuracy Chance", upgradesMenuScreen, menuItemBaseImage, menuItemHighlightedImage, upgradesMenu.size());
+    	upgradesMenu.add(menuItem);
+    	menuItem = new MenuItem("Stab Stun Chance", upgradesMenuScreen, menuItemBaseImage, menuItemHighlightedImage, upgradesMenu.size());
+    	upgradesMenu.add(menuItem);
+    	menuItem = new MenuItem("Lifesteal", upgradesMenuScreen, menuItemBaseImage, menuItemHighlightedImage, upgradesMenu.size());
     	upgradesMenu.add(menuItem);
     	checkAddScrollBar(upgradesMenu);
 
@@ -339,6 +367,8 @@ public final class ResourceLoader {
     		scrollBarSelectedFile = scrollBarSelectedFile.replace("/", pathSeparator);
     		
     		playerStartFile = playerStartFile.replace("/", pathSeparator);
+    		healthBarPositiveFile = healthBarPositiveFile.replace("/", pathSeparator);
+    		healthBarNegativeFile = healthBarNegativeFile.replace("/", pathSeparator);
     	}
     }
 }

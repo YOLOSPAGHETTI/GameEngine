@@ -24,7 +24,7 @@ public class MenuItem {
 		index = menuSize;
 	}
 	
-	public String getText() {
+	String getText() {
 		return text;
 	}
 	

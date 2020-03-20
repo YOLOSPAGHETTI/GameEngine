@@ -1,6 +1,8 @@
 package game;
 
+import ui.HealthBar;
 import ui.ResourceLoader;
+import ui.Sprite;
 
 public class Player extends Entity {
     private ActionController controller;
@@ -10,6 +12,9 @@ public class Player extends Entity {
 
     protected Player(ActionController controller) {
         this.controller = controller;
+        setHp(ResourceLoader.baseHealth);
+        HealthBar healthBar = new HealthBar(ResourceLoader.baseHealth, ResourceLoader.healthBarPositive, ResourceLoader.healthBarNegative);
+        setHealthBar(healthBar);
     }
 
     /*private boolean canAct() {
@@ -23,14 +28,11 @@ public class Player extends Entity {
     	}
     }
     
-    public ActionController getAnimationController() {
+    public ActionController getActionController() {
     	return controller;
     }
 
     public void determineAttack(int mouseX, int mouseY) {
-        //System.out.println("DownTime: "+event.getDownTime());
-        //System.out.println("EventTime: "+event.getEventTime());
-        //System.out.println("Pressure: "+event.getPressure());
     	if(mouseStartX != -1) {
 	        float differenceX = mouseStartX-mouseX;
 	        float differenceY = mouseStartY-mouseY;
@@ -77,14 +79,19 @@ public class Player extends Entity {
     }
     
     public void block(int mouseX) {
-    	int frameWidth = ResourceLoader.frameWidth;
-    	if(mouseX < frameWidth/3) {
+    	Sprite sprite = controller.getCurrentSprite();
+    	int spriteX = sprite.getX();
+    	int spriteWidth = sprite.getWidth();
+    	if(mouseX < spriteX) {
+    		//System.out.println("block left");
     		controller.queue(ResourceLoader.playerBlockLeft);
     	}
-    	else if(mouseX >= frameWidth/3 && mouseX <= (2*frameWidth)/3) {
+    	else if(mouseX >= spriteX && mouseX <= spriteX+spriteWidth) {
+    		//System.out.println("block mid");
     		controller.queue(ResourceLoader.playerBlockMid);
     	}
     	else {
+    		//System.out.println("block right");
     		controller.queue(ResourceLoader.playerBlockRight);
     	}
     }

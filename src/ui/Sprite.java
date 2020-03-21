@@ -4,17 +4,17 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 
 public class Sprite {
-	private int maxX;
-	private int maxY;
 	private BufferedImage img;
 	private int width;
     private int height;
     private int x;
     private int y;
     private int z;
+    private int maxX;
+	private int maxY;
     
     // Menu Item
-    protected Sprite(BufferedImage img, int menuSize) {
+    protected Sprite(BufferedImage img, int menuSize, int z) {
     	this.img = img;
     	width = ResourceLoader.frameWidth;
     	height = img.getHeight();
@@ -22,25 +22,10 @@ public class Sprite {
     	maxY = ResourceLoader.frameHeight-height;
     	x = 0;
     	y = height * menuSize;
+    	this.z = z;
     }
     
-    // Scroll Edge
-    protected Sprite(BufferedImage img, boolean right) {
-    	this.img = img;
-    	width = img.getWidth();
-    	height = ResourceLoader.frameHeight;
-    	maxX = ResourceLoader.frameWidth-width;
-    	maxY = ResourceLoader.frameHeight-height;
-    	if(right) {
-    		x=maxX;
-    	}
-    	else {
-    		x=0;
-    	}
-    	y = 0;
-    }
-    
-    // Player Health Bar
+    // Scroll Edge / Screen Edge Health Bar
     protected Sprite(BufferedImage img, boolean right, int z) {
     	this.img = img;
     	width = img.getWidth();
@@ -58,7 +43,7 @@ public class Sprite {
     }
     
     // Scroll Bar
-    protected Sprite(BufferedImage img, boolean right, int height, int width) {
+    protected Sprite(BufferedImage img, boolean right, int z, int height, int width) {
     	this.img = img;
     	this.height = height;
     	this.width = width;
@@ -71,23 +56,27 @@ public class Sprite {
     		x = 0;
     	}
     	y = 0;
+    	this.z = z;
     }
     
-    protected Sprite(BufferedImage img, int x, int y) {
+    protected Sprite(BufferedImage img, int x, int y, int z) {
     	this.img = img;
     	width = img.getWidth();
     	height = img.getHeight();
     	this.x = x;
     	this.y = y;
+    	this.z = z;
     	maxX = ResourceLoader.frameWidth-width;
     	maxY = ResourceLoader.frameHeight-height;
     }
     
-    protected Sprite(BufferedImage img, int x, int y, int width, int height) {
-    	this(img, x, y);
-    	
+    protected Sprite(BufferedImage img, int x, int y, int z, int width, int height) {
+    	this.img = img;
     	this.width = width;
     	this.height = height;
+    	this.x = x;
+    	this.y = y;
+    	this.z = z;
     	maxX = ResourceLoader.frameWidth-width;
     	maxY = ResourceLoader.frameHeight-height;
     }

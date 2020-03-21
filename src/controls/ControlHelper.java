@@ -1,22 +1,24 @@
 package controls;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
 import game.Player;
 import ui.FrameController;
 import ui.MenuController;
 import ui.ResourceLoader;
 
-public class ControlHelper {
+public class ControlHelper implements MouseListener, MouseMotionListener, MouseWheelListener, KeyListener {
 	private FrameController fc;
 	private MenuController mc;
 	private Player player;
-	private KeyEventThread ket;
 	
-	private ArrayList<String> controls;
-	private ArrayList<String> keyboardControls;
-	private ArrayList<String> mouseControls;
+	private PlayerControls controls;
 	private int lastMouseButton;
 	
 	public ControlHelper(FrameController fc, MenuController mc, Player player) {
@@ -24,34 +26,24 @@ public class ControlHelper {
 		this.mc = mc;
 		this.player = player;
 		controls = new PlayerControls();
-		for(String control : controls) {
-			if(control.contains("Mouse")) {
-				mouseControls.add(control);
-			}
-			else {
-				keyboardControls.add(control);
-			}
-		}
-		
-		MouseListenerEvent mle = new MouseListenerEvent(this);
-        MouseMotionListenerEvent mmle = new MouseMotionListenerEvent(this);
         
         //Register for mouse events on panel.
-        fc.addMouseListener(mle);
-        fc.addMouseMotionListener(mmle);
-        
-        ket = new KeyEventThread(this);
-        ket.start();
+        fc.addMouseListener(this);
+        fc.addMouseMotionListener(this);
+        fc.addMouseWheelListener(this);
+        fc.addKeyListener(this);
 	}
 	
-	void mouseMoved(MouseEvent e) {
+	@Override
+	public void mouseMoved(MouseEvent e) {
 		int screen = fc.getScreen();
 		if(ResourceLoader.screenIsMenu(screen)) {
 			mc.highlightItemCheck(e.getX(), e.getY());
 		}
 	}
 	
-	void mouseDragged(MouseEvent e) {
+	@Override
+	public void mouseDragged(MouseEvent e) {
 		if(lastMouseButton == MouseEvent.BUTTON1) {
 			int screen = fc.getScreen();
 			if(ResourceLoader.screenIsMenu(screen)) {
@@ -63,7 +55,8 @@ public class ControlHelper {
 		}
 	}
 	
-	void mouseClicked(MouseEvent e) {
+	@Override
+	public void mouseClicked(MouseEvent e) {
 		if(e.getButton() == MouseEvent.BUTTON1) {
 			int screen = fc.getScreen();
 			if(ResourceLoader.screenIsMenu(screen)) {
@@ -72,7 +65,8 @@ public class ControlHelper {
 		}
 	}
 	
-	void mousePressed(MouseEvent e) {
+	@Override
+	public void mousePressed(MouseEvent e) {
 		lastMouseButton = e.getButton();
 		if(e.getButton() == MouseEvent.BUTTON1) {
 			int screen = fc.getScreen();
@@ -85,7 +79,8 @@ public class ControlHelper {
 		}
 	}
 	
-	void mouseReleased(MouseEvent e) {
+	@Override
+	public void mouseReleased(MouseEvent e) {
 		if(e.getButton() == MouseEvent.BUTTON1) {
 			int screen = fc.getScreen();
 			if(ResourceLoader.screenIsMenu(screen)) {
@@ -97,42 +92,57 @@ public class ControlHelper {
 		}
 	}
 	
-	void mouseExited(MouseEvent e) {
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		
+	}
+	
+	@Override
+	public void mouseExited(MouseEvent e) {
 		int screen = fc.getScreen();
 		if(ResourceLoader.screenIsMenu(screen)) {
 			mc.nullifyHighlightedItem();
 		}
 	}
 	
-	void mouseWheelMoved(MouseEvent e) {
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent e) {
 		int screen = fc.getScreen();
 		if(ResourceLoader.screenIsMenu(screen)) {
-			mc.nullifyHighlightedItem();
+			//mc.nullifyHighlightedItem();
 		}
 	}
-	
-	void checkActions(String keyBuffer) {
-		String[] keyBufferArray = keyBuffer.split(":");
-		String keyCommand = keyBufferArray[0];
-		String statusStr = keyBufferArray[1];
-		//System.out.println(keyCommand);
-		//System.out.println(statusStr);
-		if(statusStr.equals("1")) {
-			int screen = fc.getScreen();
-			if(ResourceLoader.screenIsMenu(screen)) {
-				if(keyCommand.equals("Down")) {
-					mc.highlightItemCheck(true);
-				}
-				else if(keyCommand.equals("Up")) {
-					mc.highlightItemCheck(false);
-				}
-				else if(keyCommand.equals("Enter")) {
-					mc.selectHighlightedItem();
-				}
-				else if(keyCommand.equals("Escape")) {
-					mc.goBack();
-				}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		//System.out.println("KeyTyped: " + e.paramString());	
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		//System.out.println("KeyPressed: " + e.paramString());
+		
+		int screen = fc.getScreen();
+		int keyCommand = e.getKeyCode();
+		if(ResourceLoader.screenIsMenu(screen)) {
+			if(keyCommand == KeyEvent.VK_DOWN) {
+				mc.highlightItemCheck(true);
+			}
+			else if(keyCommand == KeyEvent.VK_UP) {
+				mc.highlightItemCheck(false);
+			}
+			else if(keyCommand == KeyEvent.VK_ENTER) {
+				mc.selectHighlightedItem();
+			}
+			else if(keyCommand == KeyEvent.VK_ESCAPE) {
+				mc.goBack();
 			}
 		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		//System.out.println("KeyReleased: " + e.paramString());
+		
 	}
 }

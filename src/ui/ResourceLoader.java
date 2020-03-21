@@ -12,6 +12,7 @@ import java.util.HashMap;
 import javax.imageio.ImageIO;
 
 import game.Action;
+import game.Enemy;
 import game.StatusEffect;
 import ui.Menu;
 import ui.MenuItem;
@@ -34,12 +35,17 @@ public final class ResourceLoader {
 	// Screen Size
 	public static int frameWidth;
 	public static int frameHeight;
-	protected static final String bgFile = "";
+	private static final String bgFile = "";
+	public static BufferedImage bgImage;
 	
 	// Layers
-	public static final int bottomLayer = 0;
-	public static final int midLayer = 1;
-	public static final int topLayer = 2;
+	public static final int bgLayer = 0;
+	public static final int entityLayerBottom = 1;
+	public static final int entityLayerMid = 2;
+	public static final int entityLayerTop = 3;
+	public static final int uiLayerBottom = 4;
+	public static final int uiLayerMid = 5;
+	public static final int uiLayerTop = 6;
 	
 	// Menus
 	protected static HashMap<Integer,Menu> menus = new HashMap<Integer,Menu>();
@@ -58,14 +64,14 @@ public final class ResourceLoader {
 	public static final int enemy3 = 3;
 	
 	// Player data
-	private static int playerWidth;
-	private static int playerHeight;
-	private static int playerStartX;
-	private static int playerStartY;
+	static int playerWidth;
+	static int playerHeight;
+	static int playerStartX;
+	static int playerStartY;
 	private static String playerStartFile = workingDir + pathSeparator + "src/img/player/germanic-knight.jpg";
 	
 	// Player animations
-	private static final long playerIdleTime = 1000;
+	private static final long idleTime = 1000;
     private static final long playerCleaveTime = 500;
     private static final long playerStabTime = 800;
     private static final long playerBlockTime = 1000;
@@ -85,7 +91,19 @@ public final class ResourceLoader {
     public static final int baseStabDamage = 15;
     public static final int baseShieldDamageBlock = 10;
     public static final int baseArmorDamageBlock = 0;
-    public static final int baseHealth = 50;
+    
+    // Enemies
+    private static ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+    private static int enemyWidth;
+	private static int enemyHeight;
+	private static int enemy1StartX;
+	private static int enemy2StartX;
+	private static int enemy3StartX;
+	private static int enemyStartY;
+	private static int enemyVerticalSpacing;
+    private static String enemyStartFile = workingDir + pathSeparator + "src/img/enemies/evil-knight.jpg";
+    public static Action enemyIdle;
+    public static Action enemyAttack;
     
     // Health Bars
  	private static String healthBarPositiveFile = workingDir + pathSeparator + "src/img/player/player_health_bar_positive.jpg";
@@ -108,6 +126,16 @@ public final class ResourceLoader {
     	playerHeight = height/7;
     	playerStartX = width/2 - playerWidth/2;
     	playerStartY = height - playerHeight - playerHeight/2;
+    	
+    	enemyWidth = width/12;
+    	enemyHeight = height/7;
+    	enemy1StartX = width/4;
+    	enemy2StartX = width/2 - enemyWidth/2;
+    	enemy3StartX = (2*width)/3;
+    	enemyStartY = height - playerHeight - playerHeight/2 - (height*3)/14;
+    	enemyVerticalSpacing = height/14;
+    	
+    	// bgImage = loadImage(bgFile);
     	
     	setupMenus();
     	setupActions();
@@ -234,103 +262,149 @@ public final class ResourceLoader {
     private static void setupActions() {
     	BufferedImage playerStartImage = loadImage(playerStartFile);
     	
-    	int[] targets = {-1};
+    	ArrayList<Integer> targets = new ArrayList<Integer>();
     	ArrayList<StatusEffect> effects = new ArrayList<StatusEffect>();
-    	playerIdle = new Action(0, 0, targets, effects, 0, playerIdleTime);
-    	playerIdle.add(new Sprite(playerStartImage, playerStartX, playerStartY, playerWidth, playerHeight));
-    	playerIdle.add(new Sprite(playerStartImage, playerStartX+20, playerStartY, playerWidth, playerHeight));
-    	playerIdle.add(new Sprite(playerStartImage, playerStartX, playerStartY, playerWidth, playerHeight));
-    	playerIdle.add(new Sprite(playerStartImage, playerStartX-20, playerStartY, playerWidth, playerHeight));
-    	playerIdle.add(new Sprite(playerStartImage, playerStartX, playerStartY, playerWidth, playerHeight));
+    	playerIdle = new Action(0, 0, targets, effects, 0, idleTime);
+    	playerIdle.add(new PlayerSprite(playerStartImage, 0, 0));
+    	playerIdle.add(new PlayerSprite(playerStartImage, 20, 0));
+    	playerIdle.add(new PlayerSprite(playerStartImage, 0, 0));
+    	playerIdle.add(new PlayerSprite(playerStartImage, -20, 0));
+    	playerIdle.add(new PlayerSprite(playerStartImage, 0, 0));
     	playerIdle.calculateTimePerSprite();
     	//System.out.println("idle done");
     	
-    	playerCleaveLeft = new Action(0, 0, targets, effects, 1, playerCleaveTime);
-    	playerCleaveLeft.add(new Sprite(playerStartImage, playerStartX, playerStartY, playerWidth, playerHeight));
-    	playerCleaveLeft.add(new Sprite(playerStartImage, playerStartX+20, playerStartY+20, playerWidth, playerHeight));
-    	playerCleaveLeft.add(new Sprite(playerStartImage, playerStartX+40, playerStartY+40, playerWidth, playerHeight));
-    	playerCleaveLeft.add(new Sprite(playerStartImage, playerStartX+60, playerStartY+60, playerWidth, playerHeight));
-    	playerCleaveLeft.add(new Sprite(playerStartImage, playerStartX+40, playerStartY+60, playerWidth, playerHeight));
-    	playerCleaveLeft.add(new Sprite(playerStartImage, playerStartX+20, playerStartY+60, playerWidth, playerHeight));
-    	playerCleaveLeft.add(new Sprite(playerStartImage, playerStartX, playerStartY+60, playerWidth, playerHeight));
-    	playerCleaveLeft.add(new Sprite(playerStartImage, playerStartX-20, playerStartY+60, playerWidth, playerHeight));
-    	playerCleaveLeft.add(new Sprite(playerStartImage, playerStartX-40, playerStartY+60, playerWidth, playerHeight));
-    	playerCleaveLeft.add(new Sprite(playerStartImage, playerStartX-60, playerStartY+60, playerWidth, playerHeight));
-    	playerCleaveLeft.add(new Sprite(playerStartImage, playerStartX-40, playerStartY+40, playerWidth, playerHeight));
-    	playerCleaveLeft.add(new Sprite(playerStartImage, playerStartX-20, playerStartY+20, playerWidth, playerHeight));
-    	playerCleaveLeft.add(new Sprite(playerStartImage, playerStartX, playerStartY, playerWidth, playerHeight));
+    	targets.add(enemy3);
+    	targets.add(enemy2);
+    	targets.add(enemy1);
+    	playerCleaveLeft = new Action(baseCleaveDamage, baseCleaveDamage, targets, effects, 1, playerCleaveTime);
+    	playerCleaveLeft.add(new PlayerSprite(playerStartImage, 0, 0));
+    	playerCleaveLeft.add(new PlayerSprite(playerStartImage, 20, 20));
+    	playerCleaveLeft.add(new PlayerSprite(playerStartImage, 40, 40));
+    	playerCleaveLeft.add(new PlayerSprite(playerStartImage, 60, 60));
+    	playerCleaveLeft.add(new PlayerSprite(playerStartImage, 40, 60));
+    	playerCleaveLeft.add(new PlayerSprite(playerStartImage, 20, 60));
+    	playerCleaveLeft.add(new PlayerSprite(playerStartImage, 0, 60));
+    	playerCleaveLeft.add(new PlayerSprite(playerStartImage, -20, 60));
+    	playerCleaveLeft.add(new PlayerSprite(playerStartImage, -40, 60));
+    	playerCleaveLeft.add(new PlayerSprite(playerStartImage, -60, 60));
+    	playerCleaveLeft.add(new PlayerSprite(playerStartImage, -40, 40));
+    	playerCleaveLeft.add(new PlayerSprite(playerStartImage, -20, 20));
+    	playerCleaveLeft.add(new PlayerSprite(playerStartImage, 0, 0));
     	playerCleaveLeft.calculateTimePerSprite();
     	
-    	playerCleaveRight = new Action(0, 0, targets, effects, 1, playerCleaveTime);
-    	playerCleaveRight.add(new Sprite(playerStartImage, playerStartX, playerStartY, playerWidth, playerHeight));
-    	playerCleaveRight.add(new Sprite(playerStartImage, playerStartX-20, playerStartY+20, playerWidth, playerHeight));
-    	playerCleaveRight.add(new Sprite(playerStartImage, playerStartX-40, playerStartY+40, playerWidth, playerHeight));
-    	playerCleaveRight.add(new Sprite(playerStartImage, playerStartX-60, playerStartY+60, playerWidth, playerHeight));
-    	playerCleaveRight.add(new Sprite(playerStartImage, playerStartX-40, playerStartY+60, playerWidth, playerHeight));
-    	playerCleaveRight.add(new Sprite(playerStartImage, playerStartX-20, playerStartY+60, playerWidth, playerHeight));
-    	playerCleaveRight.add(new Sprite(playerStartImage, playerStartX, playerStartY+60, playerWidth, playerHeight));
-    	playerCleaveRight.add(new Sprite(playerStartImage, playerStartX+20, playerStartY+60, playerWidth, playerHeight));
-    	playerCleaveRight.add(new Sprite(playerStartImage, playerStartX+40, playerStartY+60, playerWidth, playerHeight));
-    	playerCleaveRight.add(new Sprite(playerStartImage, playerStartX+60, playerStartY+60, playerWidth, playerHeight));
-    	playerCleaveRight.add(new Sprite(playerStartImage, playerStartX+40, playerStartY+40, playerWidth, playerHeight));
-    	playerCleaveRight.add(new Sprite(playerStartImage, playerStartX+20, playerStartY+20, playerWidth, playerHeight));
-    	playerCleaveRight.add(new Sprite(playerStartImage, playerStartX, playerStartY, playerWidth, playerHeight));
+    	targets.clear();
+    	targets.add(enemy1);
+    	targets.add(enemy2);
+    	targets.add(enemy3);
+    	playerCleaveRight = new Action(baseCleaveDamage, baseCleaveDamage, targets, effects, 1, playerCleaveTime);
+    	playerCleaveRight.add(new PlayerSprite(playerStartImage, 0, 0));
+    	playerCleaveRight.add(new PlayerSprite(playerStartImage, -20, 20));
+    	playerCleaveRight.add(new PlayerSprite(playerStartImage, -40, 40));
+    	playerCleaveRight.add(new PlayerSprite(playerStartImage, -60, 60));
+    	playerCleaveRight.add(new PlayerSprite(playerStartImage, -40, 60));
+    	playerCleaveRight.add(new PlayerSprite(playerStartImage, -20, 60));
+    	playerCleaveRight.add(new PlayerSprite(playerStartImage, 0, 60));
+    	playerCleaveRight.add(new PlayerSprite(playerStartImage, 20, 60));
+    	playerCleaveRight.add(new PlayerSprite(playerStartImage, 40, 60));
+    	playerCleaveRight.add(new PlayerSprite(playerStartImage, 60, 60));
+    	playerCleaveRight.add(new PlayerSprite(playerStartImage, 40, 40));
+    	playerCleaveRight.add(new PlayerSprite(playerStartImage, 20, 20));
+    	playerCleaveRight.add(new PlayerSprite(playerStartImage, 0, 0));
     	playerCleaveRight.calculateTimePerSprite();
     	//System.out.println("cleave done");
     	
-    	playerStabLeft = new Action(0, 0, targets, effects, 2, playerStabTime);
-    	playerStabLeft.add(new Sprite(playerStartImage, playerStartX, playerStartY, playerWidth, playerHeight));
-    	playerStabLeft.add(new Sprite(playerStartImage, playerStartX+20, playerStartY-20, playerWidth, playerHeight));
-    	playerStabLeft.add(new Sprite(playerStartImage, playerStartX, playerStartY, playerWidth, playerHeight));
-    	playerStabLeft.add(new Sprite(playerStartImage, playerStartX-20, playerStartY+20, playerWidth, playerHeight));
-    	playerStabLeft.add(new Sprite(playerStartImage, playerStartX-40, playerStartY+40, playerWidth, playerHeight));
-    	playerStabLeft.add(new Sprite(playerStartImage, playerStartX-60, playerStartY+60, playerWidth, playerHeight));
-    	playerStabLeft.add(new Sprite(playerStartImage, playerStartX-40, playerStartY+40, playerWidth, playerHeight));
-    	playerStabLeft.add(new Sprite(playerStartImage, playerStartX-20, playerStartY+20, playerWidth, playerHeight));
-    	playerStabLeft.add(new Sprite(playerStartImage, playerStartX, playerStartY, playerWidth, playerHeight));
+    	targets.clear();
+    	targets.add(enemy1);
+    	playerStabLeft = new Action(baseStabDamage, baseStabDamage, targets, effects, 2, playerStabTime);
+    	playerStabLeft.add(new PlayerSprite(playerStartImage, 0, 0));
+    	playerStabLeft.add(new PlayerSprite(playerStartImage, 20, -20));
+    	playerStabLeft.add(new PlayerSprite(playerStartImage, 0, 0));
+    	playerStabLeft.add(new PlayerSprite(playerStartImage, -20, 20));
+    	playerStabLeft.add(new PlayerSprite(playerStartImage, -40, 40));
+    	playerStabLeft.add(new PlayerSprite(playerStartImage, -60, 60));
+    	playerStabLeft.add(new PlayerSprite(playerStartImage, -40, 40));
+    	playerStabLeft.add(new PlayerSprite(playerStartImage, -20, 20));
+    	playerStabLeft.add(new PlayerSprite(playerStartImage, 0, 0));
     	playerStabLeft.calculateTimePerSprite();
     	
-    	playerStabRight = new Action(0, 0, targets, effects, 2, playerStabTime);
-    	playerStabRight.add(new Sprite(playerStartImage, playerStartX, playerStartY, playerWidth, playerHeight));
-    	playerStabRight.add(new Sprite(playerStartImage, playerStartX-20, playerStartY-20, playerWidth, playerHeight));
-    	playerStabRight.add(new Sprite(playerStartImage, playerStartX, playerStartY, playerWidth, playerHeight));
-    	playerStabRight.add(new Sprite(playerStartImage, playerStartX+20, playerStartY+20, playerWidth, playerHeight));
-    	playerStabRight.add(new Sprite(playerStartImage, playerStartX+40, playerStartY+40, playerWidth, playerHeight));
-    	playerStabRight.add(new Sprite(playerStartImage, playerStartX+60, playerStartY+60, playerWidth, playerHeight));
-    	playerStabRight.add(new Sprite(playerStartImage, playerStartX+40, playerStartY+40, playerWidth, playerHeight));
-    	playerStabRight.add(new Sprite(playerStartImage, playerStartX+20, playerStartY+20, playerWidth, playerHeight));
-    	playerStabRight.add(new Sprite(playerStartImage, playerStartX, playerStartY, playerWidth, playerHeight));
+    	targets.clear();
+    	targets.add(enemy3);
+    	playerStabRight = new Action(baseStabDamage, baseStabDamage, targets, effects, 2, playerStabTime);
+    	playerStabRight.add(new PlayerSprite(playerStartImage, 0, 0));
+    	playerStabRight.add(new PlayerSprite(playerStartImage, -20, -20));
+    	playerStabRight.add(new PlayerSprite(playerStartImage, 0, 0));
+    	playerStabRight.add(new PlayerSprite(playerStartImage, 20, 20));
+    	playerStabRight.add(new PlayerSprite(playerStartImage, 40, 40));
+    	playerStabRight.add(new PlayerSprite(playerStartImage, 60, 60));
+    	playerStabRight.add(new PlayerSprite(playerStartImage, 40, 40));
+    	playerStabRight.add(new PlayerSprite(playerStartImage, 20, 20));
+    	playerStabRight.add(new PlayerSprite(playerStartImage, 0, 0));
     	playerStabRight.calculateTimePerSprite();
     	
-    	playerStabMid = new Action(0, 0, targets, effects, 2, playerStabTime);
-    	playerStabMid.add(new Sprite(playerStartImage, playerStartX, playerStartY, playerWidth, playerHeight));
-    	playerStabMid.add(new Sprite(playerStartImage, playerStartX, playerStartY-20, playerWidth, playerHeight));
-    	playerStabMid.add(new Sprite(playerStartImage, playerStartX, playerStartY, playerWidth, playerHeight));
-    	playerStabMid.add(new Sprite(playerStartImage, playerStartX, playerStartY+20, playerWidth, playerHeight));
-    	playerStabMid.add(new Sprite(playerStartImage, playerStartX, playerStartY+40, playerWidth, playerHeight));
-    	playerStabMid.add(new Sprite(playerStartImage, playerStartX, playerStartY+60, playerWidth, playerHeight));
-    	playerStabMid.add(new Sprite(playerStartImage, playerStartX, playerStartY+40, playerWidth, playerHeight));
-    	playerStabMid.add(new Sprite(playerStartImage, playerStartX, playerStartY+20, playerWidth, playerHeight));
-    	playerStabMid.add(new Sprite(playerStartImage, playerStartX, playerStartY, playerWidth, playerHeight));
+    	targets.clear();
+    	targets.add(enemy2);
+    	playerStabMid = new Action(baseStabDamage, baseStabDamage, targets, effects, 2, playerStabTime);
+    	playerStabMid.add(new PlayerSprite(playerStartImage, 0, 0));
+    	playerStabMid.add(new PlayerSprite(playerStartImage, 0, -20));
+    	playerStabMid.add(new PlayerSprite(playerStartImage, 0, 0));
+    	playerStabMid.add(new PlayerSprite(playerStartImage, 0, 20));
+    	playerStabMid.add(new PlayerSprite(playerStartImage, 0, 40));
+    	playerStabMid.add(new PlayerSprite(playerStartImage, 0, 60));
+    	playerStabMid.add(new PlayerSprite(playerStartImage, 0, 40));
+    	playerStabMid.add(new PlayerSprite(playerStartImage, 0, 20));
+    	playerStabMid.add(new PlayerSprite(playerStartImage, 0, 0));
     	playerStabMid.calculateTimePerSprite();
     	//System.out.println("stab done");
     	
+    	targets.clear();
     	playerBlockLeft = new Action(0, 0, targets, effects, 0, playerBlockTime);
-    	playerBlockLeft.add(new Sprite(playerStartImage, playerStartX-20, playerStartY+20, playerWidth, playerHeight));
-    	playerBlockLeft.add(new Sprite(playerStartImage, playerStartX, playerStartY, playerWidth, playerHeight));
+    	playerBlockLeft.add(new PlayerSprite(playerStartImage, -20, +20));
+    	playerBlockLeft.add(new PlayerSprite(playerStartImage, 0, 0));
     	playerBlockLeft.calculateTimePerSprite();
     	
     	playerBlockRight = new Action(0, 0, targets, effects, 0, playerBlockTime);
-    	playerBlockRight.add(new Sprite(playerStartImage, playerStartX+20, playerStartY+20, playerWidth, playerHeight));
-    	playerBlockRight.add(new Sprite(playerStartImage, playerStartX, playerStartY, playerWidth, playerHeight));
+    	playerBlockRight.add(new PlayerSprite(playerStartImage, 20, 20));
+    	playerBlockRight.add(new PlayerSprite(playerStartImage, 0, 0));
     	playerBlockRight.calculateTimePerSprite();
     	
     	playerBlockMid = new Action(0, 0, targets, effects, 0, playerBlockTime);
-    	playerBlockMid.add(new Sprite(playerStartImage, playerStartX, playerStartY+20, playerWidth, playerHeight));
-    	playerBlockMid.add(new Sprite(playerStartImage, playerStartX, playerStartY, playerWidth, playerHeight));
+    	playerBlockMid.add(new PlayerSprite(playerStartImage, 0, 20));
+    	playerBlockMid.add(new PlayerSprite(playerStartImage, 0, 0));
     	playerBlockMid.calculateTimePerSprite();
-    	
     	//System.out.println("actions done");
+    }
+    
+    public static void loadEnemy(int position, int type) {
+    	BufferedImage enemyStartImage = loadImage(enemyStartFile);
+    	ArrayList<Integer> targets = new ArrayList<Integer>();
+    	ArrayList<StatusEffect> effects = new ArrayList<StatusEffect>();
+    	
+    	enemyIdle = new Action(0, 0, targets, effects, 0, 1000);
+    	enemyIdle.add(new Sprite(enemyStartImage, calculateEnemyX(position), calculateEnemyY(position), 
+    			entityLayerMid, enemyWidth, enemyHeight));
+    	enemyIdle.calculateTimePerSprite();
+    }
+    
+    private static int calculateEnemyX(int position) {
+    	if(position%3 == 0) {
+    		return enemy3StartX;
+    	}
+    	else if(position%2 == 0) {
+    		return enemy2StartX;
+    	}
+    	return enemy1StartX;
+    }
+    
+    private static int calculateEnemyY(int position) {
+    	int row = (position-1)/3;
+    	return enemyStartY - row * (enemyVerticalSpacing + enemyHeight);
+    }
+    
+    public static boolean targetIsEnemy(int target) {
+    	if(target != player) {
+    		return true;
+    	}
+    	return false;
     }
     
     private static BufferedImage loadImage(String fileSource) {
@@ -367,6 +441,9 @@ public final class ResourceLoader {
     		scrollBarSelectedFile = scrollBarSelectedFile.replace("/", pathSeparator);
     		
     		playerStartFile = playerStartFile.replace("/", pathSeparator);
+    		
+    		enemyStartFile = enemyStartFile.replace("/", pathSeparator);
+    		
     		healthBarPositiveFile = healthBarPositiveFile.replace("/", pathSeparator);
     		healthBarNegativeFile = healthBarNegativeFile.replace("/", pathSeparator);
     	}

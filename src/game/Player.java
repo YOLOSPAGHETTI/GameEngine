@@ -5,15 +5,15 @@ import ui.ResourceLoader;
 import ui.Sprite;
 
 public class Player extends Entity {
-    private ActionController controller;
-
+	private static int baseHealth = 50;
+	
     private int mouseStartX = -1;
     private int mouseStartY = -1;
 
     protected Player(ActionController controller) {
+    	super(baseHealth);
         this.controller = controller;
-        setHp(ResourceLoader.baseHealth);
-        HealthBar healthBar = new HealthBar(ResourceLoader.baseHealth, ResourceLoader.healthBarPositive, ResourceLoader.healthBarNegative);
+        HealthBar healthBar = new HealthBar(baseHealth, ResourceLoader.healthBarPositive, ResourceLoader.healthBarNegative);
         setHealthBar(healthBar);
     }
 
@@ -21,7 +21,7 @@ public class Player extends Entity {
         return ps.currentAnimation == ps.idleAnimation;
     }*/
 
-    public void setDragStartCoordinates(int mouseX, int mouseY) {
+	public void setDragStartCoordinates(int mouseX, int mouseY) {
     	if(mouseStartX == -1) {
     		mouseStartX = mouseX;
     		mouseStartY = mouseY;

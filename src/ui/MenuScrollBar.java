@@ -14,10 +14,10 @@ public class MenuScrollBar {
 	
 	public MenuScrollBar(BufferedImage fileSourceEdgeBase, BufferedImage fileSourceBarBase, BufferedImage fileSourceEdgeHighlighted, 
 			BufferedImage fileSourceBarSelected, boolean right, int height) {
-		edgeBaseSprite = new Sprite(fileSourceEdgeBase, right);
-		edgeHighlightedSprite = new Sprite(fileSourceEdgeHighlighted, right);
-		barBaseSprite = new Sprite(fileSourceBarBase, right, height, edgeBaseSprite.getWidth());
-		barSelectedSprite = new Sprite(fileSourceBarSelected, right, height, edgeBaseSprite.getWidth());
+		edgeBaseSprite = new Sprite(fileSourceEdgeBase, right, ResourceLoader.uiLayerMid);
+		edgeHighlightedSprite = new Sprite(fileSourceEdgeHighlighted, right, ResourceLoader.uiLayerMid);
+		barBaseSprite = new Sprite(fileSourceBarBase, right, ResourceLoader.uiLayerTop, height, edgeBaseSprite.getWidth());
+		barSelectedSprite = new Sprite(fileSourceBarSelected, right, ResourceLoader.uiLayerTop, height, edgeBaseSprite.getWidth());
 		
 		this.right = right;
 		

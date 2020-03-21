@@ -10,16 +10,16 @@ public class MenuItem {
 	private int destination;
 	
 	public MenuItem(String text, int destination, BufferedImage baseImage, BufferedImage highlightedImage, int menuSize) {
-		baseSprite = new Sprite(baseImage, menuSize);
-		highlightedSprite = new Sprite(highlightedImage, menuSize);
+		baseSprite = new Sprite(baseImage, menuSize, ResourceLoader.uiLayerMid);
+		highlightedSprite = new Sprite(highlightedImage, menuSize, ResourceLoader.uiLayerMid);
 		this.text = text;
 		this.destination = destination;
 		index = menuSize;
 	}
 	
 	public MenuItem(String text, int destination, BufferedImage baseImage, BufferedImage highlightedImage, int menuSize, int x, int y) {
-		baseSprite = new Sprite(baseImage, x, y);
-		highlightedSprite = new Sprite(highlightedImage, x, y);
+		baseSprite = new Sprite(baseImage, x, y, ResourceLoader.uiLayerMid);
+		highlightedSprite = new Sprite(highlightedImage, x, y, ResourceLoader.uiLayerMid);
 		this.destination = destination;
 		index = menuSize;
 	}

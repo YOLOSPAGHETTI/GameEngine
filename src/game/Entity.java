@@ -6,8 +6,9 @@ public class Entity {
 	private int hp;
 	private HealthBar healthBar;
 	private boolean isDead;
+	ActionController controller;
 	
-	void setHp(int hp) {
+	public Entity(int hp) {
 		this.hp = hp;
 	}
 	

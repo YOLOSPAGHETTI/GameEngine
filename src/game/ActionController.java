@@ -22,6 +22,7 @@ public class ActionController {
     	//System.out.println("queue empty: " + actionQueue.isEmpty());
     	//System.out.println("interrupt level: " + currentAction.getInterruptLevel());
     	if(currentAction.checkNextSprite(frameTime) || (!actionQueue.isEmpty() && currentAction.getInterruptLevel() == 0)) {
+    		currentAction.dealDamage();
     		runNextAnimation();
     	}
     }

@@ -6,15 +6,13 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import game.ActionController;
+import game.Enemy;
 import game.Player;
 import ui.MenuItem;
 
@@ -31,17 +29,19 @@ public class FrameBuilder extends JPanel
     private MenuController mc;
     private Player player;
     private ActionController pac;
+    private ArrayList<Enemy> enemies;
 
-    public FrameBuilder(FrameController fc, MenuController mc, Player player) {
+    public FrameBuilder(FrameController fc, MenuController mc, Player player, ArrayList<Enemy> enemies) {
     	this.fc = fc;
     	this.mc = mc;
     	this.player = player;
+    	this.enemies = enemies;
     	this.pac = player.getActionController();
+    	
+    	bgImage = ResourceLoader.bgImage;
     	
         width = ResourceLoader.frameWidth;
         height = ResourceLoader.frameHeight;
-        String bgFile = ResourceLoader.bgFile;
-        bgImage = loadImage(bgFile);
     	
         buildFrame();
     }
@@ -83,7 +83,7 @@ public class FrameBuilder extends JPanel
     }
     
     private void drawMenu(Graphics g, Menu menu) {
-		for(int i=0; i<=ResourceLoader.topLayer; i++) {
+		for(int i=0; i<=ResourceLoader.uiLayerTop; i++) {
     		for(MenuItem menuItem : menu) {
             	if(menuItem.equals(menu.getHighlighted())) {
             		addSprite(g, menuItem.getHighlightedSprite(), menuItem.getText(), i);
@@ -112,36 +112,28 @@ public class FrameBuilder extends JPanel
     }
     
     private void drawGame(Graphics g) {
-    	for(int i=0; i<=ResourceLoader.topLayer; i++) {
-	    	if(bgImage != null) {
+    	for(int i=0; i<=ResourceLoader.uiLayerTop; i++) {
+	    	if(bgImage != null && i == ResourceLoader.bgLayer) {
+	    		System.out.println("draw bg");
 				g.drawImage(bgImage, 0, 0, null);
 			}
 	    	
 	        Sprite playerSprite = pac.getCurrentSprite();
 	        HealthBar playerHealthBar = player.getHealthBar();
 	        addSprite(g, playerSprite, i);
-	        addSprite(g, playerHealthBar.getPositiveBarSprite(), i);
-	        addSprite(g, playerHealthBar.getNegativeBarSprite(), i);
+	        addSprite(g, playerHealthBar.getPositiveBarSprite(), String.valueOf(playerHealthBar.getSize()), i);
+	        addSprite(g, playerHealthBar.getNegativeBarSprite(), String.valueOf(playerHealthBar.getSize()), i);
+	        
+	        for(Enemy enemy : enemies) {
+	        	ActionController eac = enemy.getActionController();
+	        	Sprite enemySprite = eac.getCurrentSprite();
+	        	HealthBar enemyHealthBar = enemy.getHealthBar();
+	        	
+	        	addSprite(g, enemySprite, i);
+	 	        addSprite(g, enemyHealthBar.getPositiveBarSprite(), i);
+	 	        addSprite(g, enemyHealthBar.getNegativeBarSprite(), i);
+	        }
     	}
-    }
-    
-    private BufferedImage loadImage(String file) {
-		try {
-			BufferedImage img = ImageIO.read(new File(file));
-			return img;
-		}
-		catch (IOException e) {
-			//e.printStackTrace();
-		}
-		return null;
-    }
-
-    private void addEnemySprites(ArrayList<ActionController> esArray) {
-        /*int enemyStart1X = maxX/3 - esArray.get(0).maxX/2;
-        int enemyStart2X = maxX/2 - esArray.get(1).maxX/2;
-        int enemyStart3X = (2*maxX)/3 - esArray.get(2).maxX/2;
-        int enemyStartY = (3*maxY)/7 - esArray.get(0).maxY/2;
-        int enemyYDiff = esArray.get(0).maxY;*/
     }
 
     private void addSprite(Graphics g, Sprite sprite, int currentLayer) {
@@ -150,7 +142,8 @@ public class FrameBuilder extends JPanel
     	int spriteZ = sprite.getZ();
     	int spriteWidth = sprite.getWidth();
     	int spriteHeight = sprite.getHeight();
-    	//System.out.println("x: " + spriteX + " y: " + spriteY);
+    	//System.out.println("currentLayer: " + currentLayer);
+    	//System.out.println("x: " + spriteX + " y: " + spriteY + " z: " + spriteZ);
     	//System.out.println("width: " + spriteWidth + " height: " + spriteHeight);
     	if(currentLayer == spriteZ) {
     		g.drawImage(sprite.getImage(), spriteX, spriteY, spriteWidth, spriteHeight, null);

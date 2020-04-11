@@ -4,22 +4,22 @@ import java.awt.image.BufferedImage;
 
 public class MenuItem {
 	private String text;
-	private Sprite baseSprite;
-	private Sprite highlightedSprite;
+	private MobileSprite baseSprite;
+	private MobileSprite highlightedSprite;
 	private int index;
 	private int destination;
 	
-	public MenuItem(String text, int destination, BufferedImage baseImage, BufferedImage highlightedImage, int menuSize) {
-		baseSprite = new Sprite(baseImage, menuSize, ResourceLoader.uiLayerMid);
-		highlightedSprite = new Sprite(highlightedImage, menuSize, ResourceLoader.uiLayerMid);
+	public MenuItem(String text, int destination, BufferedImage baseImage, BufferedImage highlightedImage, int menuSize, int z) {
+		baseSprite = new MobileSprite(baseImage, menuSize, z);
+		highlightedSprite = new MobileSprite(highlightedImage, menuSize, z);
 		this.text = text;
 		this.destination = destination;
 		index = menuSize;
 	}
 	
-	public MenuItem(String text, int destination, BufferedImage baseImage, BufferedImage highlightedImage, int menuSize, int x, int y) {
-		baseSprite = new Sprite(baseImage, x, y, ResourceLoader.uiLayerMid);
-		highlightedSprite = new Sprite(highlightedImage, x, y, ResourceLoader.uiLayerMid);
+	public MenuItem(String text, int destination, BufferedImage baseImage, BufferedImage highlightedImage, int menuSize, int x, int y, int z) {
+		baseSprite = new MobileSprite(baseImage, x, y, z, 0, 0);
+		highlightedSprite = new MobileSprite(highlightedImage, x, y, z, 0, 0);
 		this.destination = destination;
 		index = menuSize;
 	}
@@ -43,11 +43,11 @@ public class MenuItem {
 		return false;
 	}
 	
-	Sprite getBaseSprite() {
+	MobileSprite getBaseSprite() {
 		return baseSprite;
 	}
 	
-	Sprite getHighlightedSprite() {
+	MobileSprite getHighlightedSprite() {
 		return highlightedSprite;
 	}
 	

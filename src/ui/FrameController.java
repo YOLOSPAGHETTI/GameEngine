@@ -1,24 +1,35 @@
 package ui;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.JFrame;
 
+import controls.Control;
 import controls.ControlHelper;
-import game.ActionController;
-import game.Player;
-import game.Enemy;
+import game.Entity;
+import game.GameManager;
 
 public class FrameController extends JFrame {
+	private static final long serialVersionUID = 1L;
+	// Screen Size
+	public static int frameWidth;
+	public static int frameHeight;
 	
-	private int screen;
+	private static HashMap<Integer, View> views = new HashMap<Integer, View>();
+	private static View currentView;
+	
 	private FrameBuilder fb;
 	
-	public FrameController(Player player, ArrayList<Enemy> enemies) {
-		screen = ResourceLoader.startMenuScreen;
-		MenuController mc = new MenuController(this);
-		ControlHelper ch = new ControlHelper(this, mc, player);
-		fb = new FrameBuilder(this, mc, player, enemies);
+	public FrameController(GameManager gm, int maxLayer) {
+		ControlHelper ch = new ControlHelper(this);
+		//Register for mouse events on panel.
+        addMouseListener(ch);
+        addMouseMotionListener(ch);
+        addMouseWheelListener(ch);
+        addKeyListener(ch);
+		
+		fb = new FrameBuilder(this, maxLayer);
 		
         initUI();
     }
@@ -37,11 +48,27 @@ public class FrameController extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
     
-    public int getScreen() {
-    	return screen;
-    }
-    
-    public void setScreen(int screen) {
-    	this.screen = screen;
-    }
+	public void addView(View mode) {
+		views.put(mode.getId(), mode);
+	}
+	
+	public View getView() {
+		return currentView;
+	}
+	
+	public int getViewId() {
+		return currentView.getId();
+	}
+	
+	public void setView(int id) {
+		currentView = views.get(id);
+	}
+	
+	public ArrayList<Control> getControls() {
+		return currentView.getControls();
+	}
+	
+	public ArrayList<Entity> getEntities() {
+		return currentView.getEntities();
+	}
 }

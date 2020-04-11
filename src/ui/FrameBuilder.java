@@ -11,37 +11,26 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import game.ActionController;
-import game.Enemy;
-import game.Player;
-import ui.MenuItem;
+import game.Entity;
 
 public class FrameBuilder extends JPanel
 		implements Runnable {
+	private static final long serialVersionUID = 1L;
 	private FrameController fc;
+	private int maxLayer;
     private int width;
     private int height;
     private BufferedImage bgImage;
     
     private Thread animator;
     private final int frameTime = 10;
-    
-    private MenuController mc;
-    private Player player;
-    private ActionController pac;
-    private ArrayList<Enemy> enemies;
 
-    public FrameBuilder(FrameController fc, MenuController mc, Player player, ArrayList<Enemy> enemies) {
+    public FrameBuilder(FrameController fc, int maxLayer) {
     	this.fc = fc;
-    	this.mc = mc;
-    	this.player = player;
-    	this.enemies = enemies;
-    	this.pac = player.getActionController();
+    	this.maxLayer = maxLayer;
     	
-    	bgImage = ResourceLoader.bgImage;
-    	
-        width = ResourceLoader.frameWidth;
-        height = ResourceLoader.frameHeight;
+        width = FrameController.frameWidth;
+        height = FrameController.frameHeight;
     	
         buildFrame();
     }
@@ -67,73 +56,15 @@ public class FrameBuilder extends JPanel
     }
     
     private void drawFrame(Graphics g) {
-    	int screen = fc.getScreen();
+    	ArrayList<Entity> entities = fc.getEntities();
     	//System.out.println(screen);
-    	if(ResourceLoader.screenIsMenu(screen)) {
-    		Menu menu = mc.getMenus().get(screen);
-    		
-    		if(menu != null) {
-    			drawMenu(g, menu);
-    		}
+    	for(int i=1; i<=maxLayer; i++) {
+	    	for(Entity entity : entities) {
+	    		MobileSprite sprite = entity.getSprite();
+	    		addSprite(g, sprite, i);
+	    	}
     	}
-    	else if(screen == ResourceLoader.inGameScreen) {
-    		drawGame(g);
-        }
     	Toolkit.getDefaultToolkit().sync();
-    }
-    
-    private void drawMenu(Graphics g, Menu menu) {
-		for(int i=0; i<=ResourceLoader.uiLayerTop; i++) {
-    		for(MenuItem menuItem : menu) {
-            	if(menuItem.equals(menu.getHighlighted())) {
-            		addSprite(g, menuItem.getHighlightedSprite(), menuItem.getText(), i);
-            	}
-            	else {
-            		addSprite(g, menuItem.getBaseSprite(), menuItem.getText(), i);
-            	}
-            }
-    		MenuScrollBar menuScrollBar = menu.getScrollBar();
-    		if(menuScrollBar != null) {
-    			if(menu.isScrollEdgeHighlighted()) {
-            		addSprite(g, menuScrollBar.getHighlightedEdgeSprite(), i);
-            		if(menu.isScrollBarSelected()) {
-            			addSprite(g, menuScrollBar.getSelectedBarSprite(), i);
-            		}
-            		else {
-            			addSprite(g, menuScrollBar.getBaseBarSprite(), i);
-            		}
-            	}
-            	else {
-            		addSprite(g, menuScrollBar.getBaseEdgeSprite(), i);
-            		addSprite(g, menuScrollBar.getBaseBarSprite(), i);
-            	}
-    		}
-		}
-    }
-    
-    private void drawGame(Graphics g) {
-    	for(int i=0; i<=ResourceLoader.uiLayerTop; i++) {
-	    	if(bgImage != null && i == ResourceLoader.bgLayer) {
-	    		System.out.println("draw bg");
-				g.drawImage(bgImage, 0, 0, null);
-			}
-	    	
-	        Sprite playerSprite = pac.getCurrentSprite();
-	        HealthBar playerHealthBar = player.getHealthBar();
-	        addSprite(g, playerSprite, i);
-	        addSprite(g, playerHealthBar.getPositiveBarSprite(), String.valueOf(playerHealthBar.getSize()), i);
-	        addSprite(g, playerHealthBar.getNegativeBarSprite(), String.valueOf(playerHealthBar.getSize()), i);
-	        
-	        for(Enemy enemy : enemies) {
-	        	ActionController eac = enemy.getActionController();
-	        	Sprite enemySprite = eac.getCurrentSprite();
-	        	HealthBar enemyHealthBar = enemy.getHealthBar();
-	        	
-	        	addSprite(g, enemySprite, i);
-	 	        addSprite(g, enemyHealthBar.getPositiveBarSprite(), i);
-	 	        addSprite(g, enemyHealthBar.getNegativeBarSprite(), i);
-	        }
-    	}
     }
 
     private void addSprite(Graphics g, Sprite sprite, int currentLayer) {
@@ -180,7 +111,13 @@ public class FrameBuilder extends JPanel
             timeDiff = System.currentTimeMillis() - beforeTime;
             sleep = frameTime - timeDiff;
             
-            pac.checkNextAnimation(sleep);
+            ArrayList<Entity> entities = fc.getEntities();
+        	//System.out.println(screen);
+        	for(int i=1; i<=maxLayer; i++) {
+    	    	for(Entity entity : entities) {
+    	    		entity.checkNextAction(sleep);
+    	    	}
+        	}
 
             if (sleep < 0) {
                 sleep = 2;

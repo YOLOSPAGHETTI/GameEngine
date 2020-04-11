@@ -3,56 +3,62 @@ package game;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import ui.ResourceLoader;
-import ui.Sprite;
+import ui.MobileSprite;
 
 public class ActionController {
-    Action currentAction;
-    private Action idleAction;
-    private Queue<Action> actionQueue = new LinkedList<Action>();
+	private AnimatedAction currentAction;
+	private AnimatedAction idleAction;
+	private Queue<AnimatedAction> actionQueue = new LinkedList<AnimatedAction>();
 
-    public ActionController(Action idleAction) {
+    public ActionController(AnimatedAction idleAction) {
     	this.idleAction = idleAction;
     	currentAction = idleAction;
     	
     	currentAction.runAnimation();
     }
     
-    public void checkNextAnimation(long frameTime) {
-    	//System.out.println("queue empty: " + actionQueue.isEmpty());
-    	//System.out.println("interrupt level: " + currentAction.getInterruptLevel());
-    	if(currentAction.checkNextSprite(frameTime) || (!actionQueue.isEmpty() && currentAction.getInterruptLevel() == 0)) {
-    		currentAction.dealDamage();
-    		runNextAnimation();
+    public boolean checkNextAction(long frameTime) {
+    	if(currentAction.checkNextSprite(frameTime) || 
+    			(!actionQueue.isEmpty() && currentAction.getInterruptLevel() == 0)) {
+    		//currentAction.execute();
+    		runNextAction();
+    		return true;
     	}
+    	return false;
     }
     
-    private void runNextAnimation() {
+    void runNextAction() {
+    	//System.out.println(currentAction);
+    	
     	currentAction = actionQueue.poll();
-        if(currentAction == null) {
+    	
+    	if(currentAction == null) {
         	currentAction = idleAction;
         }
         
-        currentAction.runAnimation();
+        currentAction.execute();
     }
 
-    public Action getCurrentAction() {
+    public AnimatedAction getCurrentAction() {
     	return currentAction;
     }
     
-    public Sprite getCurrentSprite() {
+    public MobileSprite getCurrentSprite() {
+    	if(currentAction == null) {
+    		return null;
+    	}
         return currentAction.getCurrentSprite();
     }
     
-    Queue<Action> getActionQueue() {
+    Queue<AnimatedAction> getActionQueue() {
     	return actionQueue;
     }
     
-    void queue(Action action) {
+    void queue(AnimatedAction action) {
     	actionQueue.add(action);
     }
     
-    void unqueue(Action action) {
+    void unqueue(AnimatedAction action) {
     	actionQueue.remove(action);
     }
     
@@ -60,17 +66,11 @@ public class ActionController {
     	actionQueue.remove();
     }
     
-    Action getNextInQueue() {
+    AnimatedAction getNextInQueue() {
     	return actionQueue.peek();
     }
     
-    void cancelBlockActions() {
-    	actionQueue.remove(ResourceLoader.playerBlockLeft);
-    	actionQueue.remove(ResourceLoader.playerBlockRight);
-    	actionQueue.remove(ResourceLoader.playerBlockMid);
-    	
-    	if(ResourceLoader.actionIsBlock(currentAction)) {
-    		runNextAnimation();
-    	}
+    void cancelAllActions() {
+    	actionQueue.clear();
     }
 }

@@ -3,6 +3,7 @@ package ui;
 import java.util.ArrayList;
 
 public class Menu extends ArrayList<MenuItem> {
+	private static final long serialVersionUID = 1L;
 	private int totalHeight;
 	private MenuScrollBar scrollBar;
 	private MenuItem itemHighlighted;
@@ -116,7 +117,7 @@ public class Menu extends ArrayList<MenuItem> {
 		int distance = scrollBar.move(mouseY);
 		double percentage = (double)distance/(double)scrollBar.getMaxDistance();
 		//System.out.println(percentage);
-		int heightDifference = totalHeight - ResourceLoader.frameHeight;
+		int heightDifference = totalHeight - FrameController.frameHeight;
 		int offset = (int)Math.round((double)heightDifference*percentage);
 		//System.out.println(offset);
 		relocateItems(offset);
@@ -134,8 +135,8 @@ public class Menu extends ArrayList<MenuItem> {
 			relateScrollBar(offset);
 			relocateItems(offset);
 		}
-		else if(spriteY + spriteHeight > ResourceLoader.frameHeight)  {
-			int offset = -spriteY - spriteHeight + ResourceLoader.frameHeight;
+		else if(spriteY + spriteHeight > FrameController.frameHeight)  {
+			int offset = -spriteY - spriteHeight + FrameController.frameHeight;
 			//System.out.println("below: " + offset);
 			//System.out.println("newLocation: " + (spriteY+offset) + " expectedLocation: " + (ResourceLoader.frameHeight - spriteHeight));
 			relateScrollBar(offset);
@@ -145,7 +146,7 @@ public class Menu extends ArrayList<MenuItem> {
 	
 	private void relocateItems(int offset) {
 		for(MenuItem item : this) {
-			Sprite sprite = item.getBaseSprite();
+			MobileSprite sprite = item.getBaseSprite();
 			int index = item.getIndex();
 			int spriteY = sprite.getY();
 			Sprite scrollBarSprite = scrollBar.getBaseBarSprite();
@@ -155,7 +156,7 @@ public class Menu extends ArrayList<MenuItem> {
 			}
 			else if(scrollBarSprite.getY() == scrollBar.getMaxDistance() && index == 0) {
 				//System.out.println("spriteY: " + spriteY + " totalHeight: " + totalHeight + " frameH: " + ResourceLoader.frameHeight);
-				offset = -spriteY + ResourceLoader.frameHeight - totalHeight;
+				offset = -spriteY + FrameController.frameHeight - totalHeight;
 			}
 			int newLocation = spriteY+offset;
 			//System.out.println("newLocation: " + newLocation);
@@ -166,7 +167,7 @@ public class Menu extends ArrayList<MenuItem> {
 	}
 	
 	private void relateScrollBar(int offset) {
-		int heightDifference = totalHeight - ResourceLoader.frameHeight;
+		int heightDifference = totalHeight - FrameController.frameHeight;
 		double percentage = (double)offset/(double)heightDifference;
 		int distance = (int)Math.round(percentage*(double)scrollBar.getMaxDistance());
 		scrollBar.relocate(distance);

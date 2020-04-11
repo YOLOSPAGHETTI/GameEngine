@@ -8,27 +8,27 @@ public class HealthBar {
 	
 	private int maxSize;
 	private int currentSize;
-	private Sprite positiveBarSprite;
-	private Sprite negativeBarSprite;
+	private MobileSprite positiveBarSprite;
+	private MobileSprite negativeBarSprite;
 	private int maxLength;
 	private int type;
 	
 	// Player
-	public HealthBar(int size, BufferedImage positiveBar, BufferedImage negativeBar) {
+	public HealthBar(int size, BufferedImage positiveBar, BufferedImage negativeBar, int z) {
 		maxSize = size;
 		currentSize = size;
-		positiveBarSprite = new Sprite(positiveBar, true, ResourceLoader.uiLayerTop);
-		negativeBarSprite = new Sprite(negativeBar, true, ResourceLoader.uiLayerMid);
+		positiveBarSprite = new MobileSprite(positiveBar, true, z);
+		negativeBarSprite = new MobileSprite(negativeBar, true, z);
 		maxLength = positiveBarSprite.getHeight();
 		type = screenEdgeType;
 	}
 	
 	// Enemy
-	public HealthBar(int size, BufferedImage positiveBar, BufferedImage negativeBar, int x, int y, int width) {
+	public HealthBar(int size, BufferedImage positiveBar, BufferedImage negativeBar, int x, int y, int z, int width, int height) {
 		maxSize = size;
 		currentSize = size;
-		positiveBarSprite = new Sprite(positiveBar, x, y, ResourceLoader.uiLayerTop, width, 10);
-		negativeBarSprite = new Sprite(negativeBar, x, y, ResourceLoader.uiLayerMid, width, 10);
+		positiveBarSprite = new MobileSprite(positiveBar, x, y, z, 0, 0, width, height);
+		negativeBarSprite = new MobileSprite(negativeBar, x, y, z, 0, 0, width, height);
 		
 		maxLength = positiveBarSprite.getWidth();
 		type = overheadType;
@@ -64,5 +64,13 @@ public class HealthBar {
 			int newWidth = (int)Math.round((double)maxLength*percentage);
 			positiveBarSprite.setWidth(newWidth);
 		}
+	}
+	
+	public void reposition(int x, int y) {
+		positiveBarSprite.setX(x);
+		positiveBarSprite.setY(y);
+		
+		negativeBarSprite.setX(x);
+		negativeBarSprite.setY(y);
 	}
 }

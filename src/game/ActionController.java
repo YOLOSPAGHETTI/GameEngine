@@ -3,44 +3,57 @@ package game;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import ui.ResourceLoader;
+import ui.MobileSprite;
 import ui.Sprite;
 
 public class ActionController {
-    Action currentAction;
-    private Action idleAction;
-    private Queue<Action> actionQueue = new LinkedList<Action>();
+	private Action currentAction;
+	private Action idleAction;
+	private Action deathAction;
+	private Queue<Action> actionQueue = new LinkedList<Action>();
 
-    public ActionController(Action idleAction) {
+    public ActionController(Action idleAction, Action deathAction) {
     	this.idleAction = idleAction;
+    	this.deathAction = deathAction;
     	currentAction = idleAction;
     	
     	currentAction.runAnimation();
     }
     
-    public void checkNextAnimation(long frameTime) {
-    	//System.out.println("queue empty: " + actionQueue.isEmpty());
-    	//System.out.println("interrupt level: " + currentAction.getInterruptLevel());
-    	if(currentAction.checkNextSprite(frameTime) || (!actionQueue.isEmpty() && currentAction.getInterruptLevel() == 0)) {
-    		currentAction.dealDamage();
-    		runNextAnimation();
+    public boolean checkNextAction(long frameTime) {
+    	if(currentAction.checkNextSprite(frameTime) || 
+    			(!actionQueue.isEmpty() && currentAction.getInterruptLevel() == 0)) {
+    		//currentAction.execute();
+    		runNextAction();
+    		return true;
     	}
+    	return false;
     }
     
-    private void runNextAnimation() {
+    void runNextAction() {
+    	//System.out.println(currentAction);
+    	if(currentAction == deathAction) {
+    		currentAction = null;
+    		return;
+    	}
+    	
     	currentAction = actionQueue.poll();
-        if(currentAction == null) {
+    	
+    	if(currentAction == null) {
         	currentAction = idleAction;
         }
         
-        currentAction.runAnimation();
+        currentAction.execute();
     }
 
     public Action getCurrentAction() {
     	return currentAction;
     }
     
-    public Sprite getCurrentSprite() {
+    public MobileSprite getCurrentSprite() {
+    	if(currentAction == null) {
+    		return null;
+    	}
         return currentAction.getCurrentSprite();
     }
     
@@ -64,13 +77,14 @@ public class ActionController {
     	return actionQueue.peek();
     }
     
-    void cancelBlockActions() {
-    	actionQueue.remove(ResourceLoader.playerBlockLeft);
-    	actionQueue.remove(ResourceLoader.playerBlockRight);
-    	actionQueue.remove(ResourceLoader.playerBlockMid);
-    	
-    	if(ResourceLoader.actionIsBlock(currentAction)) {
-    		runNextAnimation();
-    	}
+    void cancelAllActions() {
+    	actionQueue.clear();
+    }
+    
+    public void startDeathAction() {
+    	//System.out.println(deathAction);
+    	cancelAllActions();
+    	currentAction = deathAction;
+    	currentAction.runAnimation();
     }
 }

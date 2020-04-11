@@ -1,12 +1,12 @@
 package ui;
 import java.util.ArrayList;
 
-public class Animation extends ArrayList<Sprite> {
+public class Animation extends ArrayList<MobileSprite> {
     private long duration;
     private int interruptLevel;
     private long timePerSprite;
     private long spriteTime;
-    private Sprite currentSprite;
+    private MobileSprite currentSprite;
     private int index;
 
     protected Animation(long duration, int interruptLevel) {
@@ -14,7 +14,7 @@ public class Animation extends ArrayList<Sprite> {
         this.interruptLevel = interruptLevel;
     }
     
-    protected void calculateTimePerSprite() {
+    public void calculateTimePerSprite() {
     	if(!this.isEmpty()) {
     		timePerSprite = duration/(long)this.size();
     	}
@@ -49,7 +49,7 @@ public class Animation extends ArrayList<Sprite> {
     	return false;
     }
 
-    public Sprite getCurrentSprite() {
+    public MobileSprite getCurrentSprite() {
         return currentSprite;
     }
     

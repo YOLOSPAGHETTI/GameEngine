@@ -4,24 +4,24 @@ import java.awt.image.BufferedImage;
 
 public class MenuScrollBar {
 	private boolean right;
-	private Sprite edgeBaseSprite;
-	private Sprite edgeHighlightedSprite;
-	private Sprite barBaseSprite;
-	private Sprite barSelectedSprite;
+	private MobileSprite edgeBaseSprite;
+	private MobileSprite edgeHighlightedSprite;
+	private MobileSprite barBaseSprite;
+	private MobileSprite barSelectedSprite;
 	private boolean selected;
 	private int selectedY;
 	private int maxDistance;
 	
 	public MenuScrollBar(BufferedImage fileSourceEdgeBase, BufferedImage fileSourceBarBase, BufferedImage fileSourceEdgeHighlighted, 
-			BufferedImage fileSourceBarSelected, boolean right, int height) {
-		edgeBaseSprite = new Sprite(fileSourceEdgeBase, right, ResourceLoader.uiLayerMid);
-		edgeHighlightedSprite = new Sprite(fileSourceEdgeHighlighted, right, ResourceLoader.uiLayerMid);
-		barBaseSprite = new Sprite(fileSourceBarBase, right, ResourceLoader.uiLayerTop, height, edgeBaseSprite.getWidth());
-		barSelectedSprite = new Sprite(fileSourceBarSelected, right, ResourceLoader.uiLayerTop, height, edgeBaseSprite.getWidth());
+			BufferedImage fileSourceBarSelected, boolean right, int z, int height) {
+		edgeBaseSprite = new MobileSprite(fileSourceEdgeBase, right, z);
+		edgeHighlightedSprite = new MobileSprite(fileSourceEdgeHighlighted, right, z);
+		barBaseSprite = new MobileSprite(fileSourceBarBase, right, z, height, edgeBaseSprite.getWidth());
+		barSelectedSprite = new MobileSprite(fileSourceBarSelected, right, z, height, edgeBaseSprite.getWidth());
 		
 		this.right = right;
 		
-		maxDistance = ResourceLoader.frameHeight - height;
+		maxDistance = FrameController.frameHeight - height;
 	}
 	
 	Sprite getBaseBarSprite() {

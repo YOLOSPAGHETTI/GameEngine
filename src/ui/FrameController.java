@@ -11,10 +11,7 @@ import game.Entity;
 import game.GameManager;
 
 public class FrameController extends JFrame {
-<<<<<<< HEAD
 	private static final long serialVersionUID = 1L;
-=======
->>>>>>> branch 'master' of https://github.com/YOLOSPAGHETTI/GameEngine.git
 	// Screen Size
 	public static int frameWidth;
 	public static int frameHeight;

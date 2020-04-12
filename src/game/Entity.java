@@ -62,19 +62,11 @@ public class Entity {
 		controller.checkNextAction(frameTime);
 	}
 	
-<<<<<<< HEAD
 	public void queueAction(AnimatedAction action) {
 		controller.queue(action);
 	}
 	
 	public void cancelAction(AnimatedAction action) {
-=======
-	public void queueAction(Action action) {
-		controller.queue(action);
-	}
-	
-	public void cancelAction(Action action) {
->>>>>>> branch 'master' of https://github.com/YOLOSPAGHETTI/GameEngine.git
 		controller.unqueue(action);
 		if(controller.getCurrentAction() == action) {
 			controller.runNextAction();

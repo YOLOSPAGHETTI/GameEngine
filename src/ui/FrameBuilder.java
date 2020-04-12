@@ -11,14 +11,7 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-<<<<<<< HEAD
 import game.Entity;
-=======
-import game.ActionController;
-import game.Entity;
-import game.GameManager;
-import ui.MenuItem;
->>>>>>> branch 'master' of https://github.com/YOLOSPAGHETTI/GameEngine.git
 
 public class FrameBuilder extends JPanel
 		implements Runnable {

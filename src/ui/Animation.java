@@ -2,13 +2,10 @@ package ui;
 import java.util.ArrayList;
 
 public class Animation extends ArrayList<MobileSprite> {
-<<<<<<< HEAD
 	private static final long serialVersionUID = 1L;
 	public static final int UNINTERRUPTIBLE = 0;
 	public static final int INTERRUPTIBLE = 1;
 	
-=======
->>>>>>> branch 'master' of https://github.com/YOLOSPAGHETTI/GameEngine.git
     private long duration;
     private int interruptLevel;
     private long timePerSprite;

@@ -9,17 +9,32 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 
+<<<<<<< HEAD
 import game.AnimatedAction;
 import game.Entity;
+=======
+import game.Action;
+import game.Entity;
+import game.GameManager;
+>>>>>>> branch 'master' of https://github.com/YOLOSPAGHETTI/GameEngine.git
 import ui.FrameController;
 
+<<<<<<< HEAD
 public class ControlHelper implements MouseListener, MouseMotionListener, MouseWheelListener, KeyListener {
+=======
+public class ControlHelper implements MouseListener, MouseMotionListener, MouseWheelListener, KeyListener {	
+	private FrameController fc;
+>>>>>>> branch 'master' of https://github.com/YOLOSPAGHETTI/GameEngine.git
 	private ArrayList<Control> controls = new ArrayList<Control>();
 	private int mouseX = -1;
 	private int mouseY = -1;
 	private int lastMouseButtonPressed = -1;
 	
 	public ControlHelper(FrameController fc) {
+<<<<<<< HEAD
+=======
+		this.fc = fc;
+>>>>>>> branch 'master' of https://github.com/YOLOSPAGHETTI/GameEngine.git
 		this.controls.addAll(fc.getControls());
 	}
 	
@@ -125,6 +140,7 @@ public class ControlHelper implements MouseListener, MouseMotionListener, MouseW
 	}
 	
 	private void queueControlAction(Control control) {
+<<<<<<< HEAD
 		AnimatedAction action = control.getAction();
 		Entity entity = control.getEntity();
 		entity.queueAction(action);
@@ -132,6 +148,15 @@ public class ControlHelper implements MouseListener, MouseMotionListener, MouseW
 	
 	private void cancelControlAction(Control control) {
 		AnimatedAction action = control.getAction();
+=======
+		Action action = control.getAction();
+		Entity entity = control.getEntity();
+		entity.queueAction(action);
+	}
+	
+	private void cancelControlAction(Control control) {
+		Action action = control.getAction();
+>>>>>>> branch 'master' of https://github.com/YOLOSPAGHETTI/GameEngine.git
 		Entity entity = control.getEntity();
 		entity.cancelAction(action);
 	}

@@ -2,6 +2,7 @@ package ui;
 
 import java.awt.image.BufferedImage;
 
+import actions.ActionController;
 import game.Entity;
 
 public class MenuItem extends Entity {
@@ -12,7 +13,8 @@ public class MenuItem extends Entity {
 	private int destination;
 	
 	public MenuItem(String text, int destination, BufferedImage baseImage, 
-			BufferedImage highlightedImage, int menuSize, int z) {
+			BufferedImage highlightedImage, int menuSize, ActionController controller, int z) {
+		super(controller);
 		baseSprite = new MobileSprite(baseImage, menuSize, z);
 		highlightedSprite = new MobileSprite(highlightedImage, menuSize, z);
 		this.text = text;
@@ -21,7 +23,8 @@ public class MenuItem extends Entity {
 	}
 	
 	public MenuItem(String text, int destination, BufferedImage baseImage, 
-			BufferedImage highlightedImage, int menuSize, int x, int y, int z) {
+			BufferedImage highlightedImage, int menuSize, ActionController controller, int x, int y, int z) {
+		super(controller);
 		baseSprite = new MobileSprite(baseImage, x, y, z, 0, 0);
 		highlightedSprite = new MobileSprite(highlightedImage, x, y, z, 0, 0);
 		this.destination = destination;

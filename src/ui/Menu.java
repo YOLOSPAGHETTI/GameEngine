@@ -3,6 +3,7 @@ package ui;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import actions.ActionController;
 import controls.Control;
 import game.Entity;
 
@@ -47,9 +48,9 @@ public class Menu extends View {
 		addEntity(menuItem);
 	}
 	
-	public void addMenuItem(String text, int destination) {
+	public void addMenuItem(String text, int destination, ActionController controller) {
 		MenuItem menuItem = new MenuItem(text, destination, baseMenuItemImage, highlightedMenuItemImage, 
-				menuItems.size(), menuLayer);
+				menuItems.size(), controller, menuLayer);
 		menuItems.add(menuItem);
 	}
 	

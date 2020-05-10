@@ -16,7 +16,6 @@ import game.Entity;
 public class FrameBuilder extends JPanel
 		implements Runnable {
 	private static final long serialVersionUID = 1L;
-	private FrameController fc;
 	private int maxLayer;
     private int width;
     private int height;
@@ -25,12 +24,11 @@ public class FrameBuilder extends JPanel
     private Thread animator;
     private final int frameTime = 10;
 
-    public FrameBuilder(FrameController fc, int maxLayer) {
-    	this.fc = fc;
+    public FrameBuilder(int maxLayer) {
     	this.maxLayer = maxLayer;
     	
-        width = FrameController.frameWidth;
-        height = FrameController.frameHeight;
+        width = ViewManager.frameWidth;
+        height = ViewManager.frameHeight;
     	
         buildFrame();
     }
@@ -56,7 +54,8 @@ public class FrameBuilder extends JPanel
     }
     
     private void drawFrame(Graphics g) {
-    	ArrayList<Entity> entities = fc.getEntities();
+    	ArrayList<Entity> entities = ViewManager.getEntities();
+    	System.out.println(entities);
     	//System.out.println(screen);
     	for(int i=1; i<=maxLayer; i++) {
 	    	for(Entity entity : entities) {
@@ -111,7 +110,7 @@ public class FrameBuilder extends JPanel
             timeDiff = System.currentTimeMillis() - beforeTime;
             sleep = frameTime - timeDiff;
             
-            ArrayList<Entity> entities = fc.getEntities();
+            ArrayList<Entity> entities = ViewManager.getEntities();
         	//System.out.println(screen);
         	for(int i=1; i<=maxLayer; i++) {
     	    	for(Entity entity : entities) {

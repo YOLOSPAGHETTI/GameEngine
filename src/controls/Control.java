@@ -1,17 +1,24 @@
 package controls;
 
-import game.AnimatedAction;
-import game.Entity;
+import actions.Action;
+import actions.ActionController;
 
 public class Control {
 	private Input input;
-	private Entity entity;
-	private AnimatedAction action;
+	private ActionController controller;
+	private Action action;
 	private boolean cancelOnRelease;
 	
-	public Control(Input input, Entity entity, AnimatedAction action, boolean cancelOnRelease) {
+	public Control(Input input, ActionController controller, Action action) {
 		this.input = input; 
-		this.entity = entity;
+		this.controller = controller;
+		this.action = action;
+		this.cancelOnRelease = false;
+	}
+	
+	public Control(Input input, ActionController controller, Action action, boolean cancelOnRelease) {
+		this.input = input; 
+		this.controller = controller;
 		this.action = action;
 		this.cancelOnRelease = cancelOnRelease;
 	}
@@ -24,11 +31,11 @@ public class Control {
 		return input;
 	}
 	
-	public Entity getEntity() {
-		return entity;
+	public ActionController getController() {
+		return controller;
 	}
 	
-	public AnimatedAction getAction() {
+	public Action getAction() {
 		return action;
 	}
 	

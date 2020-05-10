@@ -2,14 +2,17 @@ package ui;
 
 import java.awt.image.BufferedImage;
 
-public class MenuItem {
+import game.Entity;
+
+public class MenuItem extends Entity {
 	private String text;
 	private MobileSprite baseSprite;
 	private MobileSprite highlightedSprite;
 	private int index;
 	private int destination;
 	
-	public MenuItem(String text, int destination, BufferedImage baseImage, BufferedImage highlightedImage, int menuSize, int z) {
+	public MenuItem(String text, int destination, BufferedImage baseImage, 
+			BufferedImage highlightedImage, int menuSize, int z) {
 		baseSprite = new MobileSprite(baseImage, menuSize, z);
 		highlightedSprite = new MobileSprite(highlightedImage, menuSize, z);
 		this.text = text;
@@ -17,7 +20,8 @@ public class MenuItem {
 		index = menuSize;
 	}
 	
-	public MenuItem(String text, int destination, BufferedImage baseImage, BufferedImage highlightedImage, int menuSize, int x, int y, int z) {
+	public MenuItem(String text, int destination, BufferedImage baseImage, 
+			BufferedImage highlightedImage, int menuSize, int x, int y, int z) {
 		baseSprite = new MobileSprite(baseImage, x, y, z, 0, 0);
 		highlightedSprite = new MobileSprite(highlightedImage, x, y, z, 0, 0);
 		this.destination = destination;

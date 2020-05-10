@@ -21,7 +21,7 @@ public class MenuScrollBar {
 		
 		this.right = right;
 		
-		maxDistance = FrameController.frameHeight - height;
+		maxDistance = ViewManager.frameHeight - height;
 	}
 	
 	Sprite getBaseBarSprite() {

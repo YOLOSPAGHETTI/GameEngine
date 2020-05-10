@@ -1,13 +1,14 @@
 package controls;
 
+import java.util.ArrayList;
+
 public class Input {		
-	private Character characterInput;
-	
+	private ArrayList<Integer> keys = new ArrayList<Integer>();
 	private int mouseInput = -1;
 	private int mouseButton = -1;
 	
-	public Input(char c) {
-		characterInput = c;
+	public Input(ArrayList<Integer> keys) {
+		this.keys.addAll(keys);
 	}
 	
 	public Input(int mouseInput) {
@@ -19,8 +20,8 @@ public class Input {
 		this.mouseButton = mouseButton;
 	}
 	
-	public Character getCharacterInput() {
-		return characterInput;
+	public ArrayList<Integer> getKeyInputs() {
+		return keys;
 	}
 	
 	public int getMouseInput() {

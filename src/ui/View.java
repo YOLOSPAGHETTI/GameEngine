@@ -28,6 +28,10 @@ public class View {
 		controls.add(control);
 	}
 	
+	public void setControls(ArrayList<Control> controls) {
+		this.controls.addAll(controls);
+	}
+	
 	public int getId() {
 		return id;
 	}

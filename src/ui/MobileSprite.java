@@ -12,16 +12,16 @@ public class MobileSprite extends Sprite {
 	
 	// Menu Item
     MobileSprite(BufferedImage img, int menuSize, int z) {
-    	super(img, 0, img.getHeight()*menuSize, z, FrameController.frameWidth, img.getHeight());
+    	super(img, 0, img.getHeight()*menuSize, z, ViewManager.frameWidth, img.getHeight());
     	maxX = 0;
-    	maxY = FrameController.frameHeight-height;
+    	maxY = ViewManager.frameHeight-height;
     }
     
     // Scroll Edge / Screen Edge Health Bar
     MobileSprite(BufferedImage img, boolean right, int z) {
-    	super(img, 0, 0, z, img.getWidth(), FrameController.frameHeight);
+    	super(img, 0, 0, z, img.getWidth(), ViewManager.frameHeight);
     	if(right) {
-    		x=FrameController.frameWidth-width;
+    		x=ViewManager.frameWidth-width;
     	}
     	else {
     		x=0;
@@ -31,8 +31,8 @@ public class MobileSprite extends Sprite {
     // Scroll Bar
     MobileSprite(BufferedImage img, boolean right, int z, int height, int width) {
     	super(img, 0, 0, z, width, height);
-    	maxX = FrameController.frameWidth-width;
-    	maxY = FrameController.frameHeight-height;
+    	maxX = ViewManager.frameWidth-width;
+    	maxY = ViewManager.frameHeight-height;
     	if(right) {
     		x = maxX;
     	}
@@ -43,20 +43,20 @@ public class MobileSprite extends Sprite {
     
     MobileSprite(BufferedImage img, int x, int y, int z) {
     	super(img, x, y, z, img.getWidth(), img.getHeight());
-	    maxX = FrameController.frameWidth-width;
-		maxY = FrameController.frameHeight-height;
+	    maxX = ViewManager.frameWidth-width;
+		maxY = ViewManager.frameHeight-height;
     }
     
     MobileSprite(BufferedImage img, int x, int y, int z, int offsetX, int offsetY) {
     	super(img, x+offsetX, y+offsetY, z, img.getWidth(), img.getHeight());
-	    maxX = FrameController.frameWidth-width;
-		maxY = FrameController.frameHeight-height;
+	    maxX = ViewManager.frameWidth-width;
+		maxY = ViewManager.frameHeight-height;
     }
     
     MobileSprite(BufferedImage img, int x, int y, int z, int offsetX, int offsetY, int width, int height) {
     	super(img, x+offsetX, y+offsetY, z, width, height);
-	    maxX = FrameController.frameWidth-width;
-		maxY = FrameController.frameHeight-height;
+	    maxX = ViewManager.frameWidth-width;
+		maxY = ViewManager.frameHeight-height;
     }
     
     protected void setX(int x) {
@@ -97,11 +97,11 @@ public class MobileSprite extends Sprite {
 	
 	protected void setWidth(int width) {
 		this.width = width;
-		maxX = FrameController.frameWidth-width;
+		maxX = ViewManager.frameWidth-width;
 	}
 	
 	protected void setHeight(int height) {
 		this.height = height;
-		maxY = FrameController.frameHeight-height;
+		maxY = ViewManager.frameHeight-height;
 	}
 }

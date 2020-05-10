@@ -1,6 +1,6 @@
 package game;
 
-import ui.Animation;
+import actions.Animation;
 
 public class StatusEffect {
 	private boolean isBuff;

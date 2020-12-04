@@ -9,6 +9,9 @@ public class Entity {
 	private ActionController controller;
 	private ArrayList<Accessory> accessories; 
 	
+	public Entity() {
+	}
+	
 	public Entity(ActionController controller) {
 		this.controller = controller;
 	}

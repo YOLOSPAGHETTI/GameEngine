@@ -7,11 +7,7 @@ import actions.Action;
 import ui.ViewManager;
 import ui.menu.Menu;
 
-public class HighlightItemAction extends Action {
-	public HighlightItemAction() {
-		super();
-	}
-	
+public class HighlightItemAction extends Action {	
 	@Override
 	public void execute() {
 		Menu menu = (Menu)ViewManager.getView();

@@ -10,9 +10,10 @@ public class ImageLoader {
 	private static final String workingDir = System.getProperty("user.dir");
 	private static final String pathSeparator = File.separator;
 	
-	static BufferedImage loadImage(String fileSource) {
+	public static BufferedImage loadImage(String fileSource) {
     	BufferedImage img = null;
 		try {
+			formatFileName(fileSource);
 			img = ImageIO.read(new File(fileSource));
 		}
 		catch (IOException e) {
@@ -21,9 +22,10 @@ public class ImageLoader {
 		return img;
     }
 	
-	static BufferedImage loadImage(String fileSource, double scale) {
+	public static BufferedImage loadImage(String fileSource, double scale) {
 		BufferedImage img = null;
 		try {
+			formatFileName(fileSource);
 			img = ImageIO.read(new File(fileSource));
 			//width = (int) Math.round(img.getWidth() * scale);
 	        //height = (int) Math.round(img.getHeight() * scale);
@@ -38,6 +40,9 @@ public class ImageLoader {
 		fileName = workingDir + pathSeparator + fileName;
     	if(!pathSeparator.equals("/")) {
     		fileName = fileName.replace("/", pathSeparator);
+    	}
+    	else if(!pathSeparator.equals("\\")) {
+    		fileName = fileName.replace("\\", pathSeparator);
     	}
     	return fileName;
     }

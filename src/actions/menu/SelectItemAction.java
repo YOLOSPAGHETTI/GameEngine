@@ -5,11 +5,7 @@ import controls.ControlState;
 import ui.ViewManager;
 import ui.menu.Menu;
 
-public class SelectItemAction extends Action {
-	public SelectItemAction() {
-		super();
-	}
-	
+public class SelectItemAction extends Action {	
 	@Override
 	public void execute() {
 		Menu menu = (Menu)ViewManager.getView();

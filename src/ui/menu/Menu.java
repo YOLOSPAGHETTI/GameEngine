@@ -4,7 +4,6 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import actions.ActionController;
-import controls.Control;
 import game.Accessory;
 import game.Entity;
 import ui.MobileSprite;
@@ -12,19 +11,22 @@ import ui.Sprite;
 import ui.ViewManager;
 
 public class Menu extends Entity {
-	private static final long serialVersionUID = 1L;
-	private ArrayList<MenuItem> menuItems = new ArrayList<MenuItem>();
-	private int totalHeight;
-	private MenuScrollEdge scrollEdge;
-	private MenuScrollBar scrollBar;
-	private MenuItem itemHighlighted;
-	private boolean scrollEdgeHighlighted = false;
-	private boolean scrollBarHighlighted = false;
-	private int parentId = -1;
+	protected ArrayList<MenuItem> menuItems = new ArrayList<MenuItem>();
+	protected int totalHeight;
+	protected MenuScrollEdge scrollEdge;
+	protected MenuScrollBar scrollBar;
+	protected MenuItem itemHighlighted;
+	protected boolean scrollEdgeHighlighted = false;
+	protected boolean scrollBarHighlighted = false;
+	protected int parentId = -1;
 	
-	private BufferedImage baseMenuItemImage;
-	private BufferedImage highlightedMenuItemImage;
-	private int menuLayer;
+	protected BufferedImage baseMenuItemImage;
+	protected BufferedImage highlightedMenuItemImage;
+	protected int menuLayer;
+	
+	public Menu(int id) {
+		super(null);
+	}
 	
 	public Menu(int id, ActionController controller) {
 		super(controller);
@@ -71,14 +73,6 @@ public class Menu extends Entity {
 	
 	public ArrayList<MenuItem> getMenuItems() {
 		return menuItems;
-	}
-	
-	public void setBaseMenuItemImage(BufferedImage image) {
-		baseMenuItemImage = image;
-	}
-	
-	public void setHighlightedMenuItemImage(BufferedImage image) {
-		highlightedMenuItemImage = image;
 	}
 	
 	public void setMenuLayer(int z) {
@@ -128,9 +122,9 @@ public class Menu extends Entity {
 		return scrollEdge;
 	}
 	
-	public void setHighlighted(boolean down) {
+	public void setHighlighted(boolean forward) {
 		int size = menuItems.size();
-		if(down) {
+		if(forward) {
 			if(itemHighlighted == null || itemHighlighted.getIndex() == size-1) {
 				itemHighlighted = menuItems.get(0);
 				fixHighlightedOutOfFrame();
@@ -276,7 +270,7 @@ public class Menu extends Entity {
 		scrollBar.relocate(distance);
 	}
 	
-	void setParentId(int id) {
+	public void setParentId(int id) {
 		parentId = id;
 	}
 	

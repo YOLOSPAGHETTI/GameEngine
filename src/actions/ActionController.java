@@ -24,10 +24,12 @@ public class ActionController {
     }
     
     public boolean checkNextAction(long frameTime) {
-    	if(currentAction.checkNextSprite(frameTime) || 
-    			(!actionQueue.isEmpty() && currentAction.getInterruptLevel() == 0)) {
-    		runNextAction();
-    		return true;
+    	if(currentAction != null) {
+	    	if(currentAction.checkNextSprite(frameTime) || 
+	    			(!actionQueue.isEmpty() && currentAction.getInterruptLevel() == 0)) {
+	    		runNextAction();
+	    		return true;
+	    	}
     	}
     	return false;
     }

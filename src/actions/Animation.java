@@ -13,7 +13,7 @@ public class Animation extends ArrayList<MobileSprite> {
     private long timePerSprite;
     private long spriteTime;
     private MobileSprite currentSprite;
-    private int index;
+    private int animationIndex;
 
     protected Animation(long duration, int interruptLevel) {
         this.duration = duration;
@@ -31,8 +31,8 @@ public class Animation extends ArrayList<MobileSprite> {
     }
 
     public void runAnimation() {
-        index = 0;
-        currentSprite = this.get(index);
+        animationIndex = 0;
+        currentSprite = this.get(animationIndex);
         spriteTime = 0;
     }
     
@@ -40,9 +40,9 @@ public class Animation extends ArrayList<MobileSprite> {
     	spriteTime += frameTime;
     	// System.out.println(spriteTime);
     	if(spriteTime > timePerSprite) {
-    		index++;
-    		if(index < this.size()) {
-    			currentSprite = this.get(index);
+    		animationIndex++;
+    		if(animationIndex < this.size()) {
+    			currentSprite = this.get(animationIndex);
     			spriteTime = 0;
     		}
     		else {
@@ -60,7 +60,7 @@ public class Animation extends ArrayList<MobileSprite> {
     }
     
     void setIndex(int index) {
-       this.index = index;
+       this.animationIndex = index;
     }
     
     public int getInterruptLevel() {

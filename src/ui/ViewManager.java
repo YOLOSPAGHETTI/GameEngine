@@ -70,7 +70,7 @@ public class ViewManager extends JFrame {
 	}
 	
 	public static ArrayList<Control> getControls() {
-		System.out.println(currentView);
+		//System.out.println(currentView);
 		return currentView.getControls();
 	}
 	

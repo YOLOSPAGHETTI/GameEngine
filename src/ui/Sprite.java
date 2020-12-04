@@ -37,7 +37,7 @@ public class Sprite {
 		return width;
 	}
 	
-	protected void setWidth(int width) {
+	public void setWidth(int width) {
 		this.width = width;
 	}
 	
@@ -45,7 +45,7 @@ public class Sprite {
 		return height;
 	}
 	
-	protected void setHeight(int height) {
+	public void setHeight(int height) {
 		this.height = height;
 	}
 	
@@ -59,5 +59,22 @@ public class Sprite {
 	
 	public int getZ() {
 		return z;
+	}
+	
+	public void overlapWith(Sprite sprite) {
+		x = sprite.getX();
+		y = sprite.getY();
+		width = sprite.getWidth();
+		height = sprite.getHeight();
+	}
+	
+	public boolean isMouseOver(int mouseX, int mouseY) {
+		//System.out.println("mouseX: " + mouseX + " mouseY: " + mouseY);
+		//System.out.println("startx: " + x + " starty: " + y + " endx: " + (x+width) + " endy: " + (y+height));
+		if(mouseX >= x && mouseX <= x+width && mouseY >= y && mouseY <= y+height) {
+			//System.out.println(true);
+			return true;
+		}
+		return false;
 	}
 }

@@ -1,16 +1,21 @@
-package ui;
+package ui.menu;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import actions.ActionController;
 import controls.Control;
+import game.Accessory;
 import game.Entity;
+import ui.MobileSprite;
+import ui.Sprite;
+import ui.ViewManager;
 
-public class Menu extends View {
+public class Menu extends Entity {
 	private static final long serialVersionUID = 1L;
 	private ArrayList<MenuItem> menuItems = new ArrayList<MenuItem>();
 	private int totalHeight;
+	private MenuScrollEdge scrollEdge;
 	private MenuScrollBar scrollBar;
 	private MenuItem itemHighlighted;
 	private boolean scrollEdgeHighlighted = false;
@@ -21,41 +26,47 @@ public class Menu extends View {
 	private BufferedImage highlightedMenuItemImage;
 	private int menuLayer;
 	
-	public Menu(int id) {
-		super(id, new ArrayList<Entity>(), new ArrayList<Control>());
+	public Menu(int id, ActionController controller) {
+		super(controller);
 	}
 	
-	public Menu(int id, BufferedImage baseMenuItemImage, BufferedImage highlightedMenuItemImage, int menuLayer) {
-		super(id, new ArrayList<Entity>(), new ArrayList<Control>());
+	public Menu(int id, ActionController controller, BufferedImage baseMenuItemImage, BufferedImage highlightedMenuItemImage, int menuLayer) {
+		super(controller);
 		
 		this.baseMenuItemImage = baseMenuItemImage;
 		this.highlightedMenuItemImage = highlightedMenuItemImage;
 		this.menuLayer = menuLayer;
 	}
 	
-	public Menu(int id, ArrayList<Entity> entities, ArrayList<Control> controls) {
-		super(id, entities, controls);
-	}
-	
-	public Menu(int id, ArrayList<Entity> entities, ArrayList<Control> controls, 
-			ArrayList<MenuItem> menuItems) {
-		super(id, entities, controls);
+	public Menu(int id, ActionController controller, ArrayList<MenuItem> menuItems) {
+		super(controller);
 		this.menuItems.addAll(menuItems);
 	}
 	
 	public void addMenuItem(MenuItem menuItem) {
 		menuItems.add(menuItem);
-		addEntity(menuItem);
+		addAccessory(menuItem);
 	}
 	
-	public void addMenuItem(String text, int destination, ActionController controller) {
-		MenuItem menuItem = new MenuItem(text, destination, baseMenuItemImage, highlightedMenuItemImage, 
-				menuItems.size(), controller, menuLayer);
+	public void addMenuItem() {
+		MobileSprite baseMenuItemSprite = new MobileSprite(baseMenuItemImage, menuItems.size(), menuLayer);
+		MenuItem menuItem = new MenuItem(baseMenuItemSprite, this);
 		menuItems.add(menuItem);
+		addAccessory(menuItem);
+	}
+	
+	public void addMenuItem(int x, int y) {
+		MobileSprite baseMenuItemSprite = new MobileSprite(baseMenuItemImage, x, y, menuLayer, 0, 0);
+		MenuItem menuItem = new MenuItem(baseMenuItemSprite, this);
+		menuItems.add(menuItem);
+		addAccessory(menuItem);
 	}
 	
 	public void addMenuItems(ArrayList<MenuItem> menuItems) {
 		menuItems.addAll(menuItems);
+		for(Accessory menuItem : menuItems) {
+			addAccessory(menuItem);
+		}
 	}
 	
 	public ArrayList<MenuItem> getMenuItems() {
@@ -93,16 +104,17 @@ public class Menu extends View {
     		}
     	}
     	if(scrollBarHeight != -1) {
+    		MobileSprite baseScrollEdgeSprite = new MobileSprite(scrollEdgeBaseImage, true, layer);
+    		MobileSprite highlightedScrollEdgeSprite = new MobileSprite(scrollEdgeHighlightedImage, true, layer);
+    		scrollEdge = new MenuScrollEdge(baseScrollEdgeSprite, highlightedScrollEdgeSprite);
     		
-    		MenuScrollBar scrollBar = new MenuScrollBar(scrollEdgeBaseImage, scrollBarBaseImage, scrollEdgeHighlightedImage, 
-    				scrollBarSelectedImage, true, layer, scrollBarHeight);
-    		this.scrollBar = scrollBar;
+    		MobileSprite baseScrollBarSprite = new MobileSprite(scrollBarBaseImage, true, layer, scrollBarHeight, baseScrollEdgeSprite.getWidth());
+    		MobileSprite selectedScrollBarSprite = new MobileSprite(scrollBarSelectedImage, true, layer, scrollBarHeight, baseScrollEdgeSprite.getWidth());
+    		scrollBar = new MenuScrollBar(baseScrollBarSprite, selectedScrollBarSprite, scrollBarHeight);
     		
-    		int offset = scrollBar.getBaseEdgeSprite().getWidth();
+    		int offset = baseScrollEdgeSprite.getWidth();
     		for(MenuItem menuItem : menuItems) {
-        		Sprite sprite = menuItem.getBaseSprite();
-        		sprite.setWidth(sprite.getWidth() - offset);
-        		sprite = menuItem.getHighlightedSprite();
+        		Sprite sprite = menuItem.getSprite();
         		sprite.setWidth(sprite.getWidth() - offset);
         	}
     	}
@@ -110,6 +122,10 @@ public class Menu extends View {
 	
 	MenuScrollBar getScrollBar() {
 		return scrollBar;
+	}
+	
+	MenuScrollEdge getScrollEdge() {
+		return scrollEdge;
 	}
 	
 	public void setHighlighted(boolean down) {
@@ -138,10 +154,10 @@ public class Menu extends View {
 	
 	public void setHighlighted(int mouseX, int mouseY) {
 		if(scrollBar != null) {
-			if(scrollBar.isMouseOverEdge(mouseX, mouseY)) {
+			if(scrollEdge.isMouseOver(mouseX, mouseY)) {
 				nullifyHighlightedItem();
 				scrollEdgeHighlighted = true;
-				if(scrollBar.isMouseOverBar(mouseX, mouseY)) {
+				if(scrollBar.isMouseOver(mouseX, mouseY)) {
 					scrollBarHighlighted = true;
 				}
 				else {
@@ -174,12 +190,12 @@ public class Menu extends View {
 		itemHighlighted = null;
 	}
 	
-	public int getSelectedItemDestination() {
+	/*public int getSelectedItemDestination() {
 		if(itemHighlighted != null) {
 			return itemHighlighted.getDestination();
 		}
 		return -1;
-	}
+	}*/
 	
 	public boolean isScrollEdgeHighlighted() {
 		return scrollEdgeHighlighted;
@@ -249,8 +265,6 @@ public class Menu extends View {
 			}
 			int newLocation = spriteY+offset;
 			//System.out.println("newLocation: " + newLocation);
-			sprite.setYAbsolute(newLocation);
-			sprite = item.getHighlightedSprite();
 			sprite.setYAbsolute(newLocation);
 		}
 	}

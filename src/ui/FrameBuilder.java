@@ -59,8 +59,12 @@ public class FrameBuilder extends JPanel
     	//System.out.println(screen);
     	for(int i=1; i<=maxLayer; i++) {
 	    	for(Entity entity : entities) {
-	    		MobileSprite sprite = entity.getSprite();
+	    		Sprite sprite = entity.getSprite();
 	    		addSprite(g, sprite, i);
+	    		ArrayList<Sprite> accessorySprites = entity.getAccessorySprites();
+	    		for(Sprite accessorySprite : accessorySprites) {
+	    			addSprite(g, accessorySprite, i);
+	    		}
 	    	}
     	}
     	Toolkit.getDefaultToolkit().sync();
@@ -114,7 +118,9 @@ public class FrameBuilder extends JPanel
         	//System.out.println(screen);
         	for(int i=1; i<=maxLayer; i++) {
     	    	for(Entity entity : entities) {
-    	    		entity.checkNextAction(sleep);
+    	    		if(entity != null) {
+    	    			entity.checkNextAction(sleep);
+    	    		}
     	    	}
         	}
 

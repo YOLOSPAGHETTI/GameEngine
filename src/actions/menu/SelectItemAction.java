@@ -5,11 +5,7 @@ import controls.ControlState;
 import ui.ViewManager;
 import ui.menu.Menu;
 
-public class SelectItemAction extends Action {
-	public SelectItemAction(MenuController mc) {
-		super(mc);
-	}
-	
+public class SelectItemAction extends Action {	
 	@Override
 	public void run() {
 		Menu menu = (Menu)ViewManager.getView().getEntities().get(0);
@@ -22,6 +18,7 @@ public class SelectItemAction extends Action {
     	Menu menu = (Menu)ViewManager.getView().getEntities().get(0);
     	int destination = menu.getSelectedItemDestination();
 		if(destination != -1) {
+			System.out.println("Select new menu destination: " + destination);
 			ViewManager.setView(destination);
 		}
 		else {

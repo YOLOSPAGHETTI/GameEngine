@@ -61,7 +61,9 @@ public class FrameBuilder extends JPanel
     	for(int i=1; i<=maxLayer; i++) {
 	    	for(Entity entity : entities) {
 	    		Sprite sprite = entity.getSprite();
-	    		addSprite(g, sprite, i);
+	    		if(sprite != null) {
+	    			addSprite(g, sprite, i);
+	    		}
 	    		ArrayList<Accessory> accessories = entity.getAccessories();
 	    		for(Accessory accessory : accessories) {
 	    			Sprite accessorySprite = accessory.getSprite();
@@ -84,10 +86,11 @@ public class FrameBuilder extends JPanel
     	int spriteZ = sprite.getZ();
     	int spriteWidth = sprite.getWidth();
     	int spriteHeight = sprite.getHeight();
-    	//System.out.println("currentLayer: " + currentLayer);
-    	//System.out.println("x: " + spriteX + " y: " + spriteY + " z: " + spriteZ);
-    	//System.out.println("width: " + spriteWidth + " height: " + spriteHeight);
+
     	if(currentLayer == spriteZ) {
+    		//System.out.println("currentLayer: " + currentLayer);
+        	//System.out.println("x: " + spriteX + " y: " + spriteY + " z: " + spriteZ);
+        	//System.out.println("width: " + spriteWidth + " height: " + spriteHeight);
     		g.drawImage(sprite.getImage(), spriteX, spriteY, spriteWidth, spriteHeight, null);
     	}
 	}

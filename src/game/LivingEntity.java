@@ -22,7 +22,9 @@ public class LivingEntity extends Entity {
 		if(hp < 0) {
 			hp = 0;
 		}
-		healthBar.setSize(hp);
+		if(hasHealthBar()) {
+			healthBar.setSize(hp);
+		}
 		if(hp == 0) {
 			isDead = true;
 		}
@@ -30,11 +32,17 @@ public class LivingEntity extends Entity {
 	
 	void heal(int health) {
 		hp += health;
-		healthBar.setSize(hp);
+		if(hasHealthBar()) {
+			healthBar.setSize(hp);
+		}
 	}
 	
 	public boolean isDead() {
 		return isDead;
+	}
+	
+	public boolean hasHealthBar() {
+		return healthBar != null;
 	}
 	
 	public void setHealthBar(HealthBar healthBar) {

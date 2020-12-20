@@ -87,6 +87,10 @@ public class ViewManager extends JFrame {
 		return currentView.getEntities();
 	}
 	
+	public static void removeEntity(Entity entity) {
+		currentView.getEntities().remove(entity);
+	}
+	
 	public static void useNativeResolution() {
     	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     	changeResolution(screenSize.width, screenSize.height);

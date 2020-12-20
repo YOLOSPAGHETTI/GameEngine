@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import controls.ControlState;
-import ui.ImageLoader;
 import ui.MobileSprite;
 
 public class ActionController {
@@ -13,8 +12,8 @@ public class ActionController {
 	private Queue<Action> actionQueue = new LinkedList<Action>();
 
 	public ActionController() {
-    	currentAction = new Action(this);
-    	idleAction = new Action(this);
+    	currentAction = new Action();
+    	idleAction = new Action();
     }
 	
     public ActionController(Action idleAction) {
@@ -26,11 +25,12 @@ public class ActionController {
     		if(currentAction.hasAnimation()) {
     			Animation animation = currentAction.getAnimation();
     			if(animation.checkNextSprite(frameTime)) {
+    				currentAction.animationComplete();
     				runNextAction();
     	    		return true;
     			}
     		}
-    		else if(!actionQueue.isEmpty() && currentAction.getInterruptLevel() == 0) {
+    		if(!actionQueue.isEmpty() && currentAction.getInterruptLevel() == 0) {
 	    		runNextAction();
 	    		return true;
 	    	}
@@ -39,7 +39,7 @@ public class ActionController {
     }
     
     public void runNextAction() {
-    	//System.out.println(currentAction);
+    	//System.out.println("Current action complete: " + currentAction);
     	
     	currentAction = actionQueue.poll();
     	
@@ -47,6 +47,7 @@ public class ActionController {
         	currentAction = idleAction;
         }
         
+    	//System.out.println("Running new action: " + currentAction);
     	if(currentAction != null) {
     		currentAction.run();
     	}
@@ -69,6 +70,7 @@ public class ActionController {
     }
     
     public void queue(Action action, ControlState controlState) {
+    	//System.out.println("Add action to queue: " + action);
     	action.setControlState(controlState);
     	actionQueue.add(action);
     }

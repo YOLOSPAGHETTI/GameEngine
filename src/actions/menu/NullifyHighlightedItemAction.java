@@ -4,11 +4,7 @@ import actions.Action;
 import ui.ViewManager;
 import ui.menu.Menu;
 
-public class NullifyHighlightedItemAction extends Action {
-	public NullifyHighlightedItemAction(MenuController mc) {
-		super(mc);
-	}
-	
+public class NullifyHighlightedItemAction extends Action {	
 	@Override
 	public void run() {
 		Menu menu = (Menu)ViewManager.getView().getEntities().get(0);

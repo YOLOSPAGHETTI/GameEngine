@@ -4,29 +4,24 @@ import controls.ControlState;
 
 public class Action extends Thread {
 	protected ControlState controlState;
-	private ActionController ac;
 	private Animation animation;
 	private int interruptLevel;
 	
 	// Instant Action
-	public Action(ActionController ac) {
-		this.ac = ac;
+	public Action() {
 		this.interruptLevel = 0;
 	}
 	
-	public Action(ActionController ac, Animation animation) {
-		this.ac = ac;
+	public Action(Animation animation) {
 		this.animation = animation;
 		this.interruptLevel = 0;
 	}
 	
-	public Action(ActionController ac, int interruptLevel) {
-		this.ac = ac;
+	public Action(int interruptLevel) {
 		this.interruptLevel = interruptLevel;
 	}
 	
-	public Action(ActionController ac, Animation animation, int interruptLevel) {
-		this.ac = ac;
+	public Action(Animation animation, int interruptLevel) {
 		this.animation = animation;
 		this.interruptLevel = interruptLevel;
 	}
@@ -49,5 +44,9 @@ public class Action extends Thread {
 	
 	public int getInterruptLevel() {
 		return interruptLevel;
+	}
+	
+	public void animationComplete() {
+		// do something when the animation completes
 	}
 }

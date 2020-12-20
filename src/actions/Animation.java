@@ -10,6 +10,7 @@ public class Animation {
     private long timePerSprite;
     private long spriteTime;
     private int spriteIndex;
+    private boolean loop = false;
 
     public Animation(long duration, ArrayList<MobileSprite> sprites) {
         this.duration = duration;
@@ -22,6 +23,16 @@ public class Animation {
         this.currentSprite = new MobileSprite();
         sprites.add(currentSprite);
         calculateTimePerSprite();
+    }
+    
+    public Animation(long duration, ArrayList<MobileSprite> sprites, boolean loop) {
+        this(duration, sprites);
+        this.loop = loop;
+    }
+    
+    public Animation(long duration, boolean loop) {
+    	this(duration);
+        this.loop = loop;
     }
     
     public void calculateTimePerSprite() {
@@ -51,6 +62,9 @@ public class Animation {
     		}
     		else {
     			runAnimation();
+    			if(!loop) {
+    				return true;
+    			}
     		}
     	}
     	return false;

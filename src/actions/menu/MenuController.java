@@ -10,14 +10,13 @@ import controls.Input;
 
 public class MenuController extends ActionController {
 	private static ArrayList<Control> defaultControls = new ArrayList<Control>();
-	private final HighlightItemAction highlightItemAction = new HighlightItemAction(this);
-	private final SelectItemAction selectItemAction = new SelectItemAction(this);
-	private final SelectScrollBarAction selectScrollBarAction = new SelectScrollBarAction(this);
-	private final GoBackAction goBackAction = new GoBackAction(this);
-	private final NullifyHighlightedItemAction nullifyHighlightedItemAction = new NullifyHighlightedItemAction(this);
+	private final HighlightItemAction highlightItemAction = new HighlightItemAction();
+	private final SelectItemAction selectItemAction = new SelectItemAction();
+	private final SelectScrollBarAction selectScrollBarAction = new SelectScrollBarAction();
+	private final GoBackAction goBackAction = new GoBackAction();
+	private final NullifyHighlightedItemAction nullifyHighlightedItemAction = new NullifyHighlightedItemAction();
 	
 	public MenuController() {
-		super();
 		setupDefaultControls();
 	}
 	

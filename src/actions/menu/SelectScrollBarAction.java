@@ -6,11 +6,7 @@ import actions.Action;
 import ui.ViewManager;
 import ui.menu.Menu;
 
-public class SelectScrollBarAction extends Action {
-	public SelectScrollBarAction(MenuController mc) {
-		super(mc);
-	}
-	
+public class SelectScrollBarAction extends Action {	
 	@Override
 	public void run() {
 		Menu menu = (Menu)ViewManager.getView().getEntities().get(0);

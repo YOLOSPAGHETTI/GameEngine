@@ -2,6 +2,9 @@ package ui;
 
 import java.awt.image.BufferedImage;
 
+import game.Accessory;
+import game.LivingEntity;
+
 public class HealthBar {
 	public static final int overheadType = 0;
 	public static final int screenEdgeType = 1;
@@ -13,37 +16,44 @@ public class HealthBar {
 	private int maxLength;
 	private int type;
 	
-	// Player
+	private Accessory positiveBarAccessory;
+	private Accessory negativeBarAccessory;
+	
+	// Screen Edge Type
 	public HealthBar(int size, BufferedImage positiveBar, BufferedImage negativeBar, int z) {
 		maxSize = size;
 		currentSize = size;
 		positiveBarSprite = new MobileSprite(positiveBar, true, z);
-		negativeBarSprite = new MobileSprite(negativeBar, true, z);
+		negativeBarSprite = new MobileSprite(negativeBar, true, z-1);
 		maxLength = positiveBarSprite.getHeight();
 		type = screenEdgeType;
 	}
 	
-	// Enemy
-	public HealthBar(int size, BufferedImage positiveBar, BufferedImage negativeBar, int x, int y, int z, int width, int height) {
+	// Overhead Type
+	public HealthBar(int size, BufferedImage positiveBar, BufferedImage negativeBar, int x, int y, int z, int offsetX, int offsetY, int width, int height) {
 		maxSize = size;
 		currentSize = size;
-		positiveBarSprite = new MobileSprite(positiveBar, x, y, z, 0, 0, width, height);
-		negativeBarSprite = new MobileSprite(negativeBar, x, y, z, 0, 0, width, height);
+		positiveBarSprite = new MobileSprite(positiveBar, x, y, z, offsetX, offsetY, width, height);
+		negativeBarSprite = new MobileSprite(negativeBar, x, y, z-1, offsetX, offsetY, width, height);
 		
 		maxLength = positiveBarSprite.getWidth();
 		type = overheadType;
 	}
 	
-	Sprite getPositiveBarSprite() {
-		return positiveBarSprite;
-	}
-	
-	Sprite getNegativeBarSprite() {
-		return negativeBarSprite;
-	}
-	
-	int getSize() {
-		return currentSize;
+	public void attach(LivingEntity entity) {
+		if(type == overheadType) {
+			positiveBarAccessory = new Accessory(positiveBarSprite, entity);
+			negativeBarAccessory = new Accessory(negativeBarSprite, entity);
+		}
+		else {
+			positiveBarAccessory = new Accessory(positiveBarSprite);
+			negativeBarAccessory = new Accessory(negativeBarSprite);
+		}
+		
+		entity.addAccessory(positiveBarAccessory);
+		entity.addAccessory(negativeBarAccessory);
+		
+		entity.setHealthBar(this);
 	}
 	
 	public void setSize(int size) {
@@ -64,13 +74,5 @@ public class HealthBar {
 			int newWidth = (int)Math.round((double)maxLength*percentage);
 			positiveBarSprite.setWidth(newWidth);
 		}
-	}
-	
-	public void reposition(int x, int y) {
-		positiveBarSprite.setX(x);
-		positiveBarSprite.setY(y);
-		
-		negativeBarSprite.setX(x);
-		negativeBarSprite.setY(y);
 	}
 }

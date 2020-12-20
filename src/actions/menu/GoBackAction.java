@@ -4,11 +4,7 @@ import actions.Action;
 import ui.ViewManager;
 import ui.menu.Menu;
 
-public class GoBackAction extends Action {
-	public GoBackAction(MenuController mc) {
-		super(mc);
-	}
-	
+public class GoBackAction extends Action {	
 	@Override
 	public void run() {
 		Menu menu = (Menu)ViewManager.getView().getEntities().get(0);

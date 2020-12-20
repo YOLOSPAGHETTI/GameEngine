@@ -5,34 +5,28 @@ import controls.ControlState;
 import ui.ViewManager;
 import ui.menu.Menu;
 
-public class SelectItemAction extends Action {	
+public class SelectItemAction extends Action {
+	public SelectItemAction(MenuController mc) {
+		super(mc);
+	}
+	
 	@Override
-	public void execute() {
-		Menu menu = (Menu)ViewManager.getView();
+	public void run() {
+		Menu menu = (Menu)ViewManager.getView().getEntities().get(0);
     	if(menu != null) {
-    		if(controlState.isMouseButtonDown()) {
-    			int mouseY = controlState.getMouseY();
-        		if(menu.isScrollEdgeHighlighted()) {
-        			menu.moveScrollBar(mouseY);
-        		}
-        		else {
-        			selectHighlightedItem(controlState);
-        		}
-    		}
-    		else {
-    			selectHighlightedItem(controlState);
-    		}
+    		selectHighlightedItem(controlState);
     	}
 	}
 	
 	public void selectHighlightedItem(ControlState controlState) {
-    	/*Menu menu = (Menu)ViewManager.getView();
+    	Menu menu = (Menu)ViewManager.getView().getEntities().get(0);
     	int destination = menu.getSelectedItemDestination();
 		if(destination != -1) {
 			ViewManager.setView(destination);
 		}
 		else {
+			System.out.println("Destination is -1: Exiting");
 			System.exit(0);
-		}*/
+		}
     }
 }

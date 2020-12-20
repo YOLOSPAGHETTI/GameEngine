@@ -14,7 +14,7 @@ import actions.ActionController;
 import ui.ViewManager;
 
 public class ControlHelper implements MouseListener, MouseMotionListener, MouseWheelListener, KeyListener {
-	private static ArrayList<Control> controls;
+	private ArrayList<Control> controls;
 	private int mouseX = -1;
 	private int mouseY = -1;
 	private int lastMouseButtonPressed = -1;
@@ -28,7 +28,8 @@ public class ControlHelper implements MouseListener, MouseMotionListener, MouseW
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		mouseX = e.getX();
-		mouseX = e.getY();
+		mouseY = e.getY();
+		//System.out.println("Mouse Moved: mouseX: " + mouseX + ", mouseY: " + mouseY);
 		for(Control control : controls) {
 			Input input = control.getInput();
 			if(input.getMouseInput() == MouseEvent.MOUSE_MOVED) {
@@ -61,6 +62,8 @@ public class ControlHelper implements MouseListener, MouseMotionListener, MouseW
 	@Override
 	public void mousePressed(MouseEvent e) {
 		mouseButtonDown = true;
+		lastMouseButtonPressed = e.getButton();
+		//System.out.println("Mouse pressed: " + mouseButtonDown);
 		for(Control control : controls) {
 			Input input = control.getInput();
 			if(input.getMouseInput() == MouseEvent.MOUSE_PRESSED && 
@@ -73,6 +76,7 @@ public class ControlHelper implements MouseListener, MouseMotionListener, MouseW
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		mouseButtonDown = false;
+		//System.out.println("Mouse released: " + mouseButtonDown);
 		for(Control control : controls) {
 			if(control.shouldCancelOnRelease()) {
 				Input input = control.getInput();
@@ -85,10 +89,22 @@ public class ControlHelper implements MouseListener, MouseMotionListener, MouseW
 	
 	@Override
 	public void mouseEntered(MouseEvent e) {
+		for(Control control : controls) {
+			Input input = control.getInput();
+			if(input.getMouseInput() == MouseEvent.MOUSE_ENTERED) {
+				queueControlAction(control);
+			}
+		}
 	}
 	
 	@Override
 	public void mouseExited(MouseEvent e) {
+		for(Control control : controls) {
+			Input input = control.getInput();
+			if(input.getMouseInput() == MouseEvent.MOUSE_EXITED) {
+				queueControlAction(control);
+			}
+		}
 	}
 	
 	@Override
@@ -151,5 +167,9 @@ public class ControlHelper implements MouseListener, MouseMotionListener, MouseW
 		Action action = control.getAction();
 		ActionController controller = control.getController();
 		controller.unqueue(action);
+	}
+	
+	public void setControls(ArrayList<Control> controls) {
+		this.controls = controls;
 	}
 }

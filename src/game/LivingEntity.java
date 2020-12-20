@@ -1,13 +1,40 @@
 package game;
 
+import actions.ActionController;
 import ui.HealthBar;
 
 public class LivingEntity extends Entity {
-	private int health;
+	private int hp;
 	private HealthBar healthBar;
+	private boolean isDead;
 	
-	public LivingEntity(int health) {
-		this.health = health;
+	public LivingEntity(ActionController controller, int hp) {
+		super(controller);
+		this.hp = hp;
+	}
+	
+	int getHp() {
+		return hp;
+	}
+	
+	public void takeDamage(int damage) {
+		hp -= damage;
+		if(hp < 0) {
+			hp = 0;
+		}
+		healthBar.setSize(hp);
+		if(hp == 0) {
+			isDead = true;
+		}
+	}
+	
+	void heal(int health) {
+		hp += health;
+		healthBar.setSize(hp);
+	}
+	
+	public boolean isDead() {
+		return isDead;
 	}
 	
 	public void setHealthBar(HealthBar healthBar) {
@@ -16,9 +43,5 @@ public class LivingEntity extends Entity {
 	
 	public HealthBar getHealthBar() {
 		return healthBar;
-	}
-	
-	public boolean isDead() {
-		return health <= 0;
 	}
 }

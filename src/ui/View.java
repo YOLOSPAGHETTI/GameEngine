@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import controls.Control;
 import game.Entity;
+import ui.menu.Menu;
 
 public class View {
 	private final int id;

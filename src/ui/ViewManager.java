@@ -20,6 +20,7 @@ public class ViewManager extends JFrame {
 	
 	private static HashMap<Integer, View> views = new HashMap<Integer, View>();
 	private static View currentView;
+	private static ControlHelper ch;
 	
 	private FrameBuilder fb;
 	
@@ -27,8 +28,11 @@ public class ViewManager extends JFrame {
 		this.maxLayer = maxLayer;
     }
     
-    public void initUI() {   	
-    	ControlHelper ch = new ControlHelper();
+    public void initUI() {
+    	if(ch == null) {
+    		ch = new ControlHelper();
+    	}
+    	
 		//Register for mouse events on panel.
         addMouseListener(ch);
         addMouseMotionListener(ch);
@@ -52,11 +56,11 @@ public class ViewManager extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
     
-	public static void addView(View view) {
+	public void addView(View view) {
 		views.put(view.getId(), view);
 	}
 	
-	public static Object getView() {
+	public static View getView() {
 		return currentView;
 	}
 	
@@ -66,11 +70,16 @@ public class ViewManager extends JFrame {
 	
 	public static void setView(int id) {
 		//System.out.println(id);
-		currentView = views.get(id);
+		if(views.get(id) != null) {
+			currentView = views.get(id);
+			if(ch == null) {
+				ch = new ControlHelper();
+			}
+			ch.setControls(currentView.getControls());
+		}
 	}
 	
 	public static ArrayList<Control> getControls() {
-		//System.out.println(currentView);
 		return currentView.getControls();
 	}
 	

@@ -5,6 +5,13 @@ import java.awt.image.BufferedImage;
 public class MobileSprite extends Sprite {
 	private int maxX;
 	private int maxY;
+	private boolean forceOnScreen = false;
+	
+	public MobileSprite() {
+    	super();
+    	maxX = 0;
+    	maxY = ViewManager.frameHeight;
+    }
 	
 	// Menu Item
     public MobileSprite(BufferedImage img, int menuSize, int z) {
@@ -22,6 +29,7 @@ public class MobileSprite extends Sprite {
     	else {
     		x=0;
     	}
+    	forceOnScreen = true;
     }
     
     // Scroll Bar
@@ -56,19 +64,21 @@ public class MobileSprite extends Sprite {
     }
     
     public void setX(int x) {
-		this.x = fixX(x);
-	}
-	
-	public void setXAbsolute(int x) {
-		this.x = x;
+    	if(forceOnScreen) {
+    		this.x = x;
+    	}
+    	else {
+    		this.x = fixX(x);
+    	}
 	}
 	
 	public void setY(int y) {
-		this.y = fixY(y);
-	}
-	
-	public void setYAbsolute(int y) {
-		this.y = y;
+		if(forceOnScreen) {
+			this.y = y;
+		}
+		else {
+			this.y = fixY(y);
+		}
 	}
 	
 	private int fixX(int x) {

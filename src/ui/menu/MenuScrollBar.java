@@ -31,6 +31,7 @@ public class MenuScrollBar extends Accessory {
 	void setSelected(boolean selected, int mouseY) {
 		this.selected = selected;
 		selectedY = mouseY - baseSprite.getY();
+		select(selected);
 	}
 	
 	boolean isSelected() {
@@ -64,5 +65,14 @@ public class MenuScrollBar extends Accessory {
 	
 	int getMaxDistance() {
 		return maxDistance;
+	}
+	
+	void select(boolean select) {
+		if(select && selectedSprite != null) {
+			setSprite(selectedSprite);
+		}
+		else {
+			setSprite(baseSprite);
+		}
 	}
 }

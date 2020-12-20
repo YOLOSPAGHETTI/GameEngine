@@ -11,6 +11,7 @@ import ui.Sprite;
 import ui.ViewManager;
 
 public class Menu extends Entity {
+	private int id;
 	protected ArrayList<MenuItem> menuItems = new ArrayList<MenuItem>();
 	protected int totalHeight;
 	protected MenuScrollEdge scrollEdge;
@@ -24,17 +25,15 @@ public class Menu extends Entity {
 	protected BufferedImage highlightedMenuItemImage;
 	protected int menuLayer;
 	
-	public Menu(int id) {
-		super(null);
-	}
-	
 	public Menu(int id, ActionController controller) {
 		super(controller);
+		this.id = id;
 	}
 	
 	public Menu(int id, ActionController controller, BufferedImage baseMenuItemImage, BufferedImage highlightedMenuItemImage, int menuLayer) {
 		super(controller);
 		
+		this.id = id;
 		this.baseMenuItemImage = baseMenuItemImage;
 		this.highlightedMenuItemImage = highlightedMenuItemImage;
 		this.menuLayer = menuLayer;
@@ -42,6 +41,8 @@ public class Menu extends Entity {
 	
 	public Menu(int id, ActionController controller, ArrayList<MenuItem> menuItems) {
 		super(controller);
+		
+		this.id = id;
 		this.menuItems.addAll(menuItems);
 	}
 	
@@ -80,7 +81,7 @@ public class Menu extends Entity {
 	}
 	
 	public void addScrollBar(BufferedImage scrollEdgeBaseImage, BufferedImage scrollBarBaseImage, 
-			BufferedImage scrollEdgeHighlightedImage, BufferedImage scrollBarSelectedImage, int layer, int minScrollBarHeight) {		
+			BufferedImage scrollEdgeHighlightedImage, BufferedImage scrollBarSelectedImage, int layer1, int layer2, int minScrollBarHeight) {		
     	int scrollBarHeight = -1;
     	int totalMenuHeight = 0;
     	for(MenuItem menuItem : menuItems) {
@@ -98,12 +99,12 @@ public class Menu extends Entity {
     		}
     	}
     	if(scrollBarHeight != -1) {
-    		MobileSprite baseScrollEdgeSprite = new MobileSprite(scrollEdgeBaseImage, true, layer);
-    		MobileSprite highlightedScrollEdgeSprite = new MobileSprite(scrollEdgeHighlightedImage, true, layer);
-    		scrollEdge = new MenuScrollEdge(baseScrollEdgeSprite, highlightedScrollEdgeSprite);
+    		MobileSprite baseScrollEdgeSprite = new MobileSprite(scrollEdgeBaseImage, true, layer1);
+    		MobileSprite highlightedScrollEdgeSprite = new MobileSprite(scrollEdgeHighlightedImage, true, layer1);
+    		scrollEdge = new MenuScrollEdge(baseScrollEdgeSprite, highlightedScrollEdgeSprite, this);
     		
-    		MobileSprite baseScrollBarSprite = new MobileSprite(scrollBarBaseImage, true, layer, scrollBarHeight, baseScrollEdgeSprite.getWidth());
-    		MobileSprite selectedScrollBarSprite = new MobileSprite(scrollBarSelectedImage, true, layer, scrollBarHeight, baseScrollEdgeSprite.getWidth());
+    		MobileSprite baseScrollBarSprite = new MobileSprite(scrollBarBaseImage, true, layer2, scrollBarHeight, baseScrollEdgeSprite.getWidth());
+    		MobileSprite selectedScrollBarSprite = new MobileSprite(scrollBarSelectedImage, true, layer2, scrollBarHeight, baseScrollEdgeSprite.getWidth());
     		scrollBar = new MenuScrollBar(baseScrollBarSprite, selectedScrollBarSprite, scrollBarHeight);
     		
     		int offset = baseScrollEdgeSprite.getWidth();
@@ -111,6 +112,9 @@ public class Menu extends Entity {
         		Sprite sprite = menuItem.getSprite();
         		sprite.setWidth(sprite.getWidth() - offset);
         	}
+    		
+    		addAccessory(scrollEdge);
+    		addAccessory(scrollBar);
     	}
     }
 	
@@ -124,6 +128,10 @@ public class Menu extends Entity {
 	
 	public void setHighlighted(boolean forward) {
 		int size = menuItems.size();
+		
+		if(itemHighlighted != null) {
+			itemHighlighted.highlight(false);
+		}
 		if(forward) {
 			if(itemHighlighted == null || itemHighlighted.getIndex() == size-1) {
 				itemHighlighted = menuItems.get(0);
@@ -144,33 +152,26 @@ public class Menu extends Entity {
 				fixHighlightedOutOfFrame();
 			}
 		}
+		itemHighlighted.highlight(true);
 	}
 	
 	public void setHighlighted(int mouseX, int mouseY) {
+		nullifyHighlightedItem();
 		if(scrollBar != null) {
 			if(scrollEdge.isMouseOver(mouseX, mouseY)) {
-				nullifyHighlightedItem();
 				scrollEdgeHighlighted = true;
+				scrollEdge.highlight(true);
+				
 				if(scrollBar.isMouseOver(mouseX, mouseY)) {
 					scrollBarHighlighted = true;
 				}
-				else {
-					scrollBarHighlighted = false;
-				}
 				return;
-			}
-			else {
-				scrollEdgeHighlighted = false;
 			}
 		}
 		for(MenuItem menuItem : menuItems) {
 			if(menuItem.isMouseOver(mouseX, mouseY)) {
 				itemHighlighted = menuItem;
-				scrollEdgeHighlighted = false;
-				scrollBarHighlighted = false;
-				if(scrollBar != null) {
-					scrollBar.setSelected(false, -1);
-				}
+				menuItem.highlight(true);
 				break;
 			}
 		}
@@ -181,15 +182,27 @@ public class Menu extends Entity {
 	}
 	
 	public void nullifyHighlightedItem() {
-		itemHighlighted = null;
+		if(itemHighlighted != null) {
+			itemHighlighted.highlight(false);
+			itemHighlighted = null;
+		}
+		if(scrollBar != null) {
+			scrollEdgeHighlighted = false;
+			scrollBarHighlighted = false;
+			scrollEdge.highlight(false);
+			scrollBar.setSelected(false, -1);
+		}
 	}
 	
-	/*public int getSelectedItemDestination() {
+	public int getSelectedItemDestination() {
 		if(itemHighlighted != null) {
-			return itemHighlighted.getDestination();
+			LinearMenuButton menuItem = (LinearMenuButton)itemHighlighted;
+			if(menuItem != null) {
+				return menuItem.getDestination();
+			}
 		}
-		return -1;
-	}*/
+		return -2;
+	}
 	
 	public boolean isScrollEdgeHighlighted() {
 		return scrollEdgeHighlighted;
@@ -208,6 +221,7 @@ public class Menu extends Entity {
 	
 	public void setScrollBarSelected(boolean selected, int mouseY) {
 		if(scrollBar != null) {
+			System.out.println("Select");
 			scrollBar.setSelected(selected, mouseY);
 		}
 	}
@@ -244,9 +258,11 @@ public class Menu extends Entity {
 	}
 	
 	private void relocateItems(int offset) {
-		for(MenuItem item : menuItems) {
-			MobileSprite sprite = item.getBaseSprite();
-			int index = item.getIndex();
+		//for(MenuItem item : menuItems) {
+			//MobileSprite sprite = item.getBaseSprite();
+			//int index = item.getIndex();
+			MobileSprite sprite = (MobileSprite)getSprite();
+			int index = 0;
 			int spriteY = sprite.getY();
 			Sprite scrollBarSprite = scrollBar.getBaseBarSprite();
 			if(scrollBarSprite.getY() == 0 && index == 0) {
@@ -259,8 +275,8 @@ public class Menu extends Entity {
 			}
 			int newLocation = spriteY+offset;
 			//System.out.println("newLocation: " + newLocation);
-			sprite.setYAbsolute(newLocation);
-		}
+			setY(newLocation);
+		//}
 	}
 	
 	private void relateScrollBar(int offset) {
@@ -268,6 +284,10 @@ public class Menu extends Entity {
 		double percentage = (double)offset/(double)heightDifference;
 		int distance = (int)Math.round(percentage*(double)scrollBar.getMaxDistance());
 		scrollBar.relocate(distance);
+	}
+	
+	public int getId() {
+		return id;
 	}
 	
 	public void setParentId(int id) {

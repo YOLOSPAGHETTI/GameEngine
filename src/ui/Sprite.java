@@ -11,6 +11,14 @@ public class Sprite {
     int y;
     private int z;
     
+    protected Sprite() {
+    	img = ImageLoader.getBlankImage();
+    	width = ViewManager.frameWidth;
+    	height = ViewManager.frameHeight;
+    	x = 0;
+    	y = 0;
+    }
+    
     protected Sprite(BufferedImage img, int x, int y, int z) {
     	this.img = img;
     	width = img.getWidth();

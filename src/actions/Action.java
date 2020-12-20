@@ -2,23 +2,33 @@ package actions;
 
 import controls.ControlState;
 
-public class Action extends Animation {
-	private static final long serialVersionUID = 1L;
+public class Action extends Thread {
 	protected ControlState controlState;
 	private ActionController ac;
+	private Animation animation;
+	private int interruptLevel;
 	
-	// Instant action
-	public Action() {
-		super(0, 0);
-	}
-	
+	// Instant Action
 	public Action(ActionController ac) {
-		super(0, 0);
 		this.ac = ac;
+		this.interruptLevel = 0;
 	}
 	
-	public Action(long duration, int interruptLevel) {
-		super(duration, interruptLevel);
+	public Action(ActionController ac, Animation animation) {
+		this.ac = ac;
+		this.animation = animation;
+		this.interruptLevel = 0;
+	}
+	
+	public Action(ActionController ac, int interruptLevel) {
+		this.ac = ac;
+		this.interruptLevel = interruptLevel;
+	}
+	
+	public Action(ActionController ac, Animation animation, int interruptLevel) {
+		this.ac = ac;
+		this.animation = animation;
+		this.interruptLevel = interruptLevel;
 	}
 	
 	public ControlState getControlState() {
@@ -29,7 +39,15 @@ public class Action extends Animation {
 		this.controlState = controlState;
 	}
 	
-	public void execute() {
-		// Do some action
+	public boolean hasAnimation() {
+		return animation != null;
+	}
+	
+	public Animation getAnimation() {
+		return animation;
+	}
+	
+	public int getInterruptLevel() {
+		return interruptLevel;
 	}
 }

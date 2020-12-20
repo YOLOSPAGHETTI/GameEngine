@@ -4,21 +4,17 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
-import actions.Action;
 import actions.ActionController;
 import controls.Control;
-import controls.ControlState;
 import controls.Input;
-import game.Entity;
-import ui.ViewManager;
-import ui.menu.Menu;
 
 public class MenuController extends ActionController {
-	private ArrayList<Control> defaultControls = new ArrayList<Control>();
-	private final HighlightItemAction highlightItemAction = new HighlightItemAction();
-	private final SelectItemAction selectItemAction = new SelectItemAction();
-	private final SelectScrollBarAction selectScrollBarAction = new SelectScrollBarAction();
-	private final GoBackAction goBackAction = new GoBackAction();
+	private static ArrayList<Control> defaultControls = new ArrayList<Control>();
+	private final HighlightItemAction highlightItemAction = new HighlightItemAction(this);
+	private final SelectItemAction selectItemAction = new SelectItemAction(this);
+	private final SelectScrollBarAction selectScrollBarAction = new SelectScrollBarAction(this);
+	private final GoBackAction goBackAction = new GoBackAction(this);
+	private final NullifyHighlightedItemAction nullifyHighlightedItemAction = new NullifyHighlightedItemAction(this);
 	
 	public MenuController() {
 		super();
@@ -30,9 +26,10 @@ public class MenuController extends ActionController {
 		Input mouse1ClickInput = new Input(MouseEvent.MOUSE_CLICKED, MouseEvent.BUTTON1);
 		Input mouse1PressInput = new Input(MouseEvent.MOUSE_PRESSED, MouseEvent.BUTTON1);
 		Input mouse1ReleaseInput = new Input(MouseEvent.MOUSE_RELEASED, MouseEvent.BUTTON1);
+		Input mouseExitedInput = new Input(MouseEvent.MOUSE_EXITED);
 		
 		Input downKeyInput = new Input(KeyEvent.VK_DOWN);
-		Input upKeyInput = new Input(KeyEvent.VK_DOWN);
+		Input upKeyInput = new Input(KeyEvent.VK_UP);
 		Input enterKeyInput = new Input(KeyEvent.VK_ENTER);
 		Input escapeKeyInput = new Input(KeyEvent.VK_ESCAPE);
 		
@@ -51,17 +48,20 @@ public class MenuController extends ActionController {
 		Control selectItemControlClick = new Control(mouse1ClickInput, this, selectItemAction);
 		defaultControls.add(selectItemControlClick);
 		
-		Control selectScrollBarActionControl1 = new Control(mouse1PressInput, this, selectScrollBarAction);
-		defaultControls.add(selectScrollBarActionControl1);
+		Control selectScrollBarActionControlPress = new Control(mouse1PressInput, this, selectScrollBarAction);
+		defaultControls.add(selectScrollBarActionControlPress);
 		
-		Control selectScrollBarActionControl2 = new Control(mouse1ReleaseInput, this, selectScrollBarAction);
-		defaultControls.add(selectScrollBarActionControl2);
+		Control selectScrollBarActionControlRelease = new Control(mouse1ReleaseInput, this, selectScrollBarAction);
+		defaultControls.add(selectScrollBarActionControlRelease);
 		
 		Control goBackActionControl = new Control(escapeKeyInput, this, goBackAction);
 		defaultControls.add(goBackActionControl);
+		
+		Control nullifyHighlightedItemActionControl = new Control(mouseExitedInput, this, nullifyHighlightedItemAction);
+		defaultControls.add(nullifyHighlightedItemActionControl);
 	}
 	
-	public ArrayList<Control> getDefaultControls() {
+	public static ArrayList<Control> getDefaultControls() {
 		return defaultControls;
 	}
 }

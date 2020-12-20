@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import controls.ControlState;
+import ui.ImageLoader;
 import ui.MobileSprite;
 
 public class ActionController {
@@ -12,21 +13,30 @@ public class ActionController {
 	private Queue<Action> actionQueue = new LinkedList<Action>();
 
 	public ActionController() {
-    	currentAction = null;
-    	idleAction = null;
+    	currentAction = new Action(this);
+    	idleAction = new Action(this);
     }
 	
     public ActionController(Action idleAction) {
     	this.idleAction = idleAction;
     	currentAction = idleAction;
     	
-    	currentAction.runAnimation();
+    	if(currentAction.hasAnimation()) {
+    		Animation animation = currentAction.getAnimation();
+    		animation.runAnimation();
+    	}
     }
     
     public boolean checkNextAction(long frameTime) {
     	if(currentAction != null) {
-	    	if(currentAction.checkNextSprite(frameTime) || 
-	    			(!actionQueue.isEmpty() && currentAction.getInterruptLevel() == 0)) {
+    		if(currentAction.hasAnimation()) {
+    			Animation animation = currentAction.getAnimation();
+    			if(animation.checkNextSprite(frameTime)) {
+    				runNextAction();
+    	    		return true;
+    			}
+    		}
+    		else if(!actionQueue.isEmpty() && currentAction.getInterruptLevel() == 0) {
 	    		runNextAction();
 	    		return true;
 	    	}
@@ -44,7 +54,7 @@ public class ActionController {
         }
         
     	if(currentAction != null) {
-    		currentAction.execute();
+    		currentAction.run();
     	}
     }
 
@@ -53,10 +63,11 @@ public class ActionController {
     }
     
     public MobileSprite getCurrentSprite() {
-    	if(currentAction == null) {
-    		return null;
+    	if(currentAction == null || !currentAction.hasAnimation()) {
+    		//System.out.println("No active sprite for this controller: " + this + " : Returning a blank sprite");
+    		return new MobileSprite();
     	}
-        return currentAction.getCurrentSprite();
+        return currentAction.getAnimation().getCurrentSprite();
     }
     
     Queue<Action> getActionQueue() {
@@ -82,5 +93,9 @@ public class ActionController {
     
     void cancelAllActions() {
     	actionQueue.clear();
+    }
+    
+    public void setIdleAction(Action action) {
+    	idleAction = action;
     }
 }

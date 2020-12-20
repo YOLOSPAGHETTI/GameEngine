@@ -3,26 +3,30 @@ import java.util.ArrayList;
 
 import ui.MobileSprite;
 
-public class Animation extends ArrayList<MobileSprite> {
-	private static final long serialVersionUID = 1L;
-	public static final int UNINTERRUPTIBLE = 0;
-	public static final int INTERRUPTIBLE = 1;
-	
+public class Animation {	
+	private ArrayList<MobileSprite> sprites = new ArrayList<MobileSprite>();
+	private MobileSprite currentSprite;
     private long duration;
-    private int interruptLevel;
     private long timePerSprite;
     private long spriteTime;
-    private MobileSprite currentSprite;
-    private int animationIndex;
+    private int spriteIndex;
 
-    protected Animation(long duration, int interruptLevel) {
+    public Animation(long duration, ArrayList<MobileSprite> sprites) {
         this.duration = duration;
-        this.interruptLevel = interruptLevel;
+        this.sprites.addAll(sprites);
+        calculateTimePerSprite();
+    }
+    
+    public Animation(long duration) {
+        this.duration = duration;
+        this.currentSprite = new MobileSprite();
+        sprites.add(currentSprite);
+        calculateTimePerSprite();
     }
     
     public void calculateTimePerSprite() {
-    	if(!this.isEmpty()) {
-    		timePerSprite = duration/(long)this.size();
+    	if(!sprites.isEmpty()) {
+    		timePerSprite = duration/(long)sprites.size();
     	}
     }
     
@@ -31,8 +35,8 @@ public class Animation extends ArrayList<MobileSprite> {
     }
 
     public void runAnimation() {
-        animationIndex = 0;
-        currentSprite = this.get(animationIndex);
+        spriteIndex = 0;
+        currentSprite = sprites.get(spriteIndex);
         spriteTime = 0;
     }
     
@@ -40,16 +44,13 @@ public class Animation extends ArrayList<MobileSprite> {
     	spriteTime += frameTime;
     	// System.out.println(spriteTime);
     	if(spriteTime > timePerSprite) {
-    		animationIndex++;
-    		if(animationIndex < this.size()) {
-    			currentSprite = this.get(animationIndex);
+    		spriteIndex++;
+    		if(spriteIndex < sprites.size()) {
+    			currentSprite = sprites.get(spriteIndex);
     			spriteTime = 0;
     		}
     		else {
     			runAnimation();
-    			if(interruptLevel != INTERRUPTIBLE) {
-    				return true;
-    			}
     		}
     	}
     	return false;
@@ -60,10 +61,16 @@ public class Animation extends ArrayList<MobileSprite> {
     }
     
     void setIndex(int index) {
-       this.animationIndex = index;
+       this.spriteIndex = index;
     }
     
-    public int getInterruptLevel() {
-		return interruptLevel;
-	}
+    public void addSprite(MobileSprite sprite) {
+    	sprites.add(sprite);
+    	calculateTimePerSprite();
+    }
+    
+    public void setSprites(ArrayList<MobileSprite> sprites) {
+    	this.sprites.addAll(sprites);
+        calculateTimePerSprite();
+    }
 }

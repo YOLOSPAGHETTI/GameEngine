@@ -8,12 +8,10 @@ public class MenuScrollEdge extends Accessory {
 	private MobileSprite baseSprite;
 	private MobileSprite highlightedSprite;
 	
-	public MenuScrollEdge(MobileSprite baseSprite, MobileSprite highlightedSprite) {
+	public MenuScrollEdge(MobileSprite baseSprite, MobileSprite highlightedSprite, Menu menu) {
 		super(baseSprite);
 		this.baseSprite = baseSprite;
 		this.highlightedSprite = highlightedSprite;
-		//baseSprite = new MobileSprite(fileSourceEdgeBase, true, z);
-		//highlightedSprite = new MobileSprite(fileSourceEdgeHighlighted, true, z);
 	}
 	
 	Sprite getBaseEdgeSprite() {
@@ -22,5 +20,14 @@ public class MenuScrollEdge extends Accessory {
 	
 	Sprite getHighlightedEdgeSprite() {
 		return highlightedSprite;
+	}
+	
+	void highlight(boolean highlight) {
+		if(highlight && highlightedSprite != null) {
+			setSprite(highlightedSprite);
+		}
+		else {
+			setSprite(baseSprite);
+		}
 	}
 }

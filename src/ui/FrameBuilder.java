@@ -5,12 +5,13 @@ import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import controls.Control;
+import game.Accessory;
 import game.Entity;
 
 public class FrameBuilder extends JPanel
@@ -19,7 +20,6 @@ public class FrameBuilder extends JPanel
 	private int maxLayer;
     private int width;
     private int height;
-    private BufferedImage bgImage;
     
     private Thread animator;
     private final int frameTime = 10;
@@ -55,15 +55,23 @@ public class FrameBuilder extends JPanel
     
     private void drawFrame(Graphics g) {
     	ArrayList<Entity> entities = ViewManager.getEntities();
-    	System.out.println(entities);
-    	//System.out.println(screen);
+    	//System.out.println("Entities: " + entities);
+    	//System.out.println("View Id: " + ViewManager.getViewId());
+    	//System.out.println("Controls: " + ViewManager.getControls());
     	for(int i=1; i<=maxLayer; i++) {
 	    	for(Entity entity : entities) {
 	    		Sprite sprite = entity.getSprite();
 	    		addSprite(g, sprite, i);
-	    		ArrayList<Sprite> accessorySprites = entity.getAccessorySprites();
-	    		for(Sprite accessorySprite : accessorySprites) {
-	    			addSprite(g, accessorySprite, i);
+	    		ArrayList<Accessory> accessories = entity.getAccessories();
+	    		for(Accessory accessory : accessories) {
+	    			Sprite accessorySprite = accessory.getSprite();
+	    			String text = accessory.getText();
+	    			if(text.isEmpty()) {
+	    				addSprite(g, accessorySprite, i);
+	    			}
+	    			else {
+	    				addSprite(g, accessorySprite, text, i);
+	    			}
 	    		}
 	    	}
     	}

@@ -9,6 +9,11 @@ import javax.imageio.ImageIO;
 public class ImageLoader {
 	private static final String workingDir = System.getProperty("user.dir");
 	private static final String pathSeparator = File.separator;
+	private static BufferedImage blank;
+	
+	public ImageLoader() {
+		blank = loadImage("src/img/blank.jpg");
+	}
 	
 	public static BufferedImage loadImage(String fileSource) {
     	BufferedImage img = null;
@@ -36,7 +41,7 @@ public class ImageLoader {
 		return img;
     }
 	
-	static String formatFileName(String fileName) {
+	private static String formatFileName(String fileName) {
 		fileName = workingDir + pathSeparator + fileName;
     	if(!pathSeparator.equals("/")) {
     		fileName = fileName.replace("/", pathSeparator);
@@ -46,4 +51,8 @@ public class ImageLoader {
     	}
     	return fileName;
     }
+	
+	public static BufferedImage getBlankImage() {
+		return blank;
+	}
 }

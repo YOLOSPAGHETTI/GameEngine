@@ -1,5 +1,6 @@
 package controls;
 
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 public class Input {		
@@ -11,8 +12,13 @@ public class Input {
 		this.keys.addAll(keys);
 	}
 	
-	public Input(int mouseInput) {
-		this.mouseInput = mouseInput;
+	public Input(int input) {
+		if(isMouseInput(input)) {
+			this.mouseInput = input;
+		}
+		else {
+			keys.add(input);
+		}
 	}
 	
 	public Input(int mouseInput, int mouseButton) {
@@ -30,5 +36,21 @@ public class Input {
 	
 	public int getMouseButton() {
 		return mouseButton;
+	}
+	
+	private boolean isMouseInput(int input) {
+		if(input == MouseEvent.MOUSE_CLICKED || 
+				input == MouseEvent.MOUSE_DRAGGED || 
+				input == MouseEvent.MOUSE_ENTERED || 
+				input == MouseEvent.MOUSE_EXITED || 
+				input == MouseEvent.MOUSE_FIRST || 
+				input == MouseEvent.MOUSE_LAST ||
+				input == MouseEvent.MOUSE_MOVED ||
+				input == MouseEvent.MOUSE_PRESSED ||
+				input == MouseEvent.MOUSE_RELEASED ||
+				input == MouseEvent.MOUSE_WHEEL) {
+			return true;
+		}
+		return false;
 	}
 }

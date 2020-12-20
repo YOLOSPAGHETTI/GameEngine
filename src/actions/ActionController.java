@@ -18,13 +18,7 @@ public class ActionController {
     }
 	
     public ActionController(Action idleAction) {
-    	this.idleAction = idleAction;
-    	currentAction = idleAction;
-    	
-    	if(currentAction.hasAnimation()) {
-    		Animation animation = currentAction.getAnimation();
-    		animation.runAnimation();
-    	}
+    	setIdleAction(idleAction);
     }
     
     public boolean checkNextAction(long frameTime) {
@@ -97,5 +91,11 @@ public class ActionController {
     
     public void setIdleAction(Action action) {
     	idleAction = action;
-    }
+    	
+		currentAction = idleAction;
+    	if(currentAction.hasAnimation()) {
+    		Animation animation = currentAction.getAnimation();
+    		animation.runAnimation();
+    	}
+	}
 }
